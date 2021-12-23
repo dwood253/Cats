@@ -13,6 +13,7 @@
 		65B905442773EF5000F8AB1F /* Cats.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 65B905422773EF5000F8AB1F /* Cats.xcdatamodeld */; };
 		65B905462773EF5600F8AB1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65B905452773EF5600F8AB1F /* Assets.xcassets */; };
 		65B905542773EF5600F8AB1F /* CatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B905532773EF5600F8AB1F /* CatsTests.swift */; };
+		65B905972774103200F8AB1F /* UIViewControler+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B905962774103200F8AB1F /* UIViewControler+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		65B9054F2773EF5600F8AB1F /* CatsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CatsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		65B905532773EF5600F8AB1F /* CatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatsTests.swift; sourceTree = "<group>"; };
 		65B905552773EF5600F8AB1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		65B905962774103200F8AB1F /* UIViewControler+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewControler+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				65B905452773EF5600F8AB1F /* Assets.xcassets */,
 				65B9054A2773EF5600F8AB1F /* Info.plist */,
 				65B905422773EF5000F8AB1F /* Cats.xcdatamodeld */,
+				65B905962774103200F8AB1F /* UIViewControler+Extension.swift */,
 			);
 			path = Cats;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				65B905442773EF5000F8AB1F /* Cats.xcdatamodeld in Sources */,
+				65B905972774103200F8AB1F /* UIViewControler+Extension.swift in Sources */,
 				65B9053E2773EF5000F8AB1F /* ViewController.swift in Sources */,
 				65B9053A2773EF5000F8AB1F /* AppDelegate.swift in Sources */,
 				65B9053C2773EF5000F8AB1F /* SceneDelegate.swift in Sources */,
