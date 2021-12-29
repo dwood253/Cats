@@ -18,10 +18,12 @@ class NetworkingManager {
     }
     
     func fetchRandomCat(completion: @escaping (Result<UIImage, Error>) -> Void ) {
-        AF.request(NetworkingUrls.random_Cat).response { response in
+        AF.request(NetworkingUrls.cat_Service_Base_Url).response { response in
             if let data = response.data, let catImage = UIImage(data: data) {
+                print("here with a new cat sir")
                 completion(.success(catImage))
             } else {
+                print("Failed to get cat")
                 completion(.failure(nmError(message: "Failed to get Random Can Image")))
             }
         }

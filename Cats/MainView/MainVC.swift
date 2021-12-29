@@ -10,7 +10,7 @@ import UIKit
 
 fileprivate let CELL_ID = "cat_cell_id"
 
-class mainVC: UIViewController {
+class MainVC: UIViewController {
     lazy var catTable: UITableView = {
         let table = UITableView(frame: CGRect.zero, style: .grouped)
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +99,7 @@ class mainVC: UIViewController {
 }
 
 //MARK: - UITableView Stuff
-extension mainVC: UITableViewDelegate, UITableViewDataSource {
+extension MainVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return catCollection.count
     }
