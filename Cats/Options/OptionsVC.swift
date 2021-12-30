@@ -24,6 +24,8 @@ class OptionsVC: UINavigationController {
         let option = OptionContainerVC(labelText: "Tag")
         return option
     }()
+    let tagPicker = UIPickerView()
+    let tagTextView = UITextView()
     
     var availableTags: [String]?
     
@@ -58,6 +60,18 @@ class OptionsVC: UINavigationController {
 
     
     func setupTagOption() -> UIView {
+        tagPicker.delegate = self
+        tagPicker.dataSource = self
+        tagTextView.translatesAutoresizingMaskIntoConstraints = false
+        tagTextView.inputView = tagPicker
+        tagTextView.tintColor = .clear
+        tagOption.view.addSubview(tagTextView)
+        NSLayoutConstraint.activate([
+            tagTextView.leadingAnchor.constraint(equalTo: tagOption.optionLabel.trailingAnchor),
+            tagTextView.centerYAnchor.constraint(equalTo: tagOption.view.centerYAnchor),
+            tagTextView.trailingAnchor.constraint(equalTo: tagOption.view.trailingAnchor),
+            tagTextView.heightAnchor.constraint(equalToConstant: Constants.labelHeight)
+        ])
         
         return tagOption.view
     }
@@ -70,7 +84,7 @@ class OptionsVC: UINavigationController {
             self.dismissLoadingView()
         }
     }
-    
+    	
     func getAvailableTags() {
         dataGroup.enter()
         NetworkingManager.shared.getAvailableTags { [weak self] (result) in
@@ -83,7 +97,6 @@ class OptionsVC: UINavigationController {
                 break
             }
             self.dataGroup.leave()
-
         }
     }
 }
@@ -106,6 +119,7 @@ extension OptionsVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     }
 }
 
+//MARK: - UICollectionViewCell
 class OptionCollectionViewCell: UICollectionViewCell {
     var option: UIView? {
         didSet {
@@ -125,6 +139,30 @@ class OptionCollectionViewCell: UICollectionViewCell {
     }
 }
 
+//MARK: PickerView
+extension OptionsVC: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        switch pickerView {
+        case tagPicker:
+            return availableTags?.count ?? 0
+        default:
+            return 0
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return availableTags?[row] ?? ""
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        self.tagTextView.text = availableTags?[row] ?? ""
+        self.tagTextView.resignFirstResponder()
+    }
+}
 
 protocol OptionSelected {
     func isSelected() -> Bool
