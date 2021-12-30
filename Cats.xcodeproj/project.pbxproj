@@ -12,6 +12,8 @@
 		65520D0A277C1BA00029C704 /* catLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65520D09277C1BA00029C704 /* catLabel.swift */; };
 		656F2945277C21FE00D359B8 /* MainTBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656F2944277C21FE00D359B8 /* MainTBC.swift */; };
 		656F2947277C22B300D359B8 /* TagExplorerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656F2946277C22B300D359B8 /* TagExplorerVC.swift */; };
+		656F2949277C304800D359B8 /* OptionContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656F2948277C304800D359B8 /* OptionContainerVC.swift */; };
+		656F294B277C309D00D359B8 /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656F294A277C309D00D359B8 /* CheckBox.swift */; };
 		65B9053A2773EF5000F8AB1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B905392773EF5000F8AB1F /* AppDelegate.swift */; };
 		65B9053C2773EF5000F8AB1F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B9053B2773EF5000F8AB1F /* SceneDelegate.swift */; };
 		65B9053E2773EF5000F8AB1F /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B9053D2773EF5000F8AB1F /* MainVC.swift */; };
@@ -22,6 +24,7 @@
 		65B906A027742E1900F8AB1F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 65B9069F27742E1900F8AB1F /* Alamofire */; };
 		65B906A227742E5100F8AB1F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B906A127742E5100F8AB1F /* NetworkManager.swift */; };
 		65B906A427742E7400F8AB1F /* NetworkUrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B906A327742E7400F8AB1F /* NetworkUrls.swift */; };
+		65E8E43E277C399200C3B823 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E43D277C399200C3B823 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,8 @@
 		65520D09277C1BA00029C704 /* catLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = catLabel.swift; sourceTree = "<group>"; };
 		656F2944277C21FE00D359B8 /* MainTBC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTBC.swift; sourceTree = "<group>"; };
 		656F2946277C22B300D359B8 /* TagExplorerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagExplorerVC.swift; sourceTree = "<group>"; };
+		656F2948277C304800D359B8 /* OptionContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionContainerVC.swift; sourceTree = "<group>"; };
+		656F294A277C309D00D359B8 /* CheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
 		65B905362773EF5000F8AB1F /* Cats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65B905392773EF5000F8AB1F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65B9053B2773EF5000F8AB1F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -53,6 +58,7 @@
 		65B905962774103200F8AB1F /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		65B906A127742E5100F8AB1F /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		65B906A327742E7400F8AB1F /* NetworkUrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUrls.swift; sourceTree = "<group>"; };
+		65E8E43D277C399200C3B823 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				65520D01277C18A10029C704 /* OptionsVC.swift */,
+				656F2948277C304800D359B8 /* OptionContainerVC.swift */,
 			);
 			path = Options;
 			sourceTree = "<group>";
@@ -94,8 +101,10 @@
 		65520D05277C18CA0029C704 /* Extensions & Components */ = {
 			isa = PBXGroup;
 			children = (
+				656F294A277C309D00D359B8 /* CheckBox.swift */,
 				65B905962774103200F8AB1F /* UIView+Extension.swift */,
 				65520D09277C1BA00029C704 /* catLabel.swift */,
+				65E8E43D277C399200C3B823 /* Constants.swift */,
 			);
 			path = "Extensions & Components";
 			sourceTree = "<group>";
@@ -105,8 +114,6 @@
 			children = (
 				65B9053D2773EF5000F8AB1F /* MainVC.swift */,
 				656F2944277C21FE00D359B8 /* MainTBC.swift */,
-				65520D07277C19A90029C704 /* CatVC.swift */,
-				656F2946277C22B300D359B8 /* TagExplorerVC.swift */,
 			);
 			path = MainView;
 			sourceTree = "<group>";
@@ -136,9 +143,11 @@
 				65B9053B2773EF5000F8AB1F /* SceneDelegate.swift */,
 				65520D06277C18E20029C704 /* MainView */,
 				65520D03277C18AF0029C704 /* Options */,
+				65E8E43F277D6F1200C3B823 /* Tags */,
 				65B905452773EF5600F8AB1F /* Assets.xcassets */,
 				65B9054A2773EF5600F8AB1F /* Info.plist */,
 				65B905422773EF5000F8AB1F /* Cats.xcdatamodeld */,
+				65520D07277C19A90029C704 /* CatVC.swift */,
 				65520D05277C18CA0029C704 /* Extensions & Components */,
 				65520D04277C18BF0029C704 /* Networking */,
 			);
@@ -152,6 +161,14 @@
 				65B905552773EF5600F8AB1F /* Info.plist */,
 			);
 			path = CatsTests;
+			sourceTree = "<group>";
+		};
+		65E8E43F277D6F1200C3B823 /* Tags */ = {
+			isa = PBXGroup;
+			children = (
+				656F2946277C22B300D359B8 /* TagExplorerVC.swift */,
+			);
+			path = Tags;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,12 +281,15 @@
 				65B905442773EF5000F8AB1F /* Cats.xcdatamodeld in Sources */,
 				65B905972774103200F8AB1F /* UIView+Extension.swift in Sources */,
 				656F2947277C22B300D359B8 /* TagExplorerVC.swift in Sources */,
+				65E8E43E277C399200C3B823 /* Constants.swift in Sources */,
 				65B9053E2773EF5000F8AB1F /* MainVC.swift in Sources */,
 				656F2945277C21FE00D359B8 /* MainTBC.swift in Sources */,
 				65520D0A277C1BA00029C704 /* catLabel.swift in Sources */,
 				65B9053A2773EF5000F8AB1F /* AppDelegate.swift in Sources */,
 				65B906A427742E7400F8AB1F /* NetworkUrls.swift in Sources */,
+				656F294B277C309D00D359B8 /* CheckBox.swift in Sources */,
 				65B9053C2773EF5000F8AB1F /* SceneDelegate.swift in Sources */,
+				656F2949277C304800D359B8 /* OptionContainerVC.swift in Sources */,
 				65520D02277C18A10029C704 /* OptionsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
