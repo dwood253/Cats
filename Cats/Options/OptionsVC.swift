@@ -25,16 +25,21 @@ class OptionsVC: UINavigationController {
         return option
     }()
     
+    var availableTags: [String]?
+    
     lazy var gifOption: OptionContainerVC = {
         let option = OptionContainerVC(labelText: "Gif")
         return option
     }()
+    
+    var dataGroup = DispatchGroup()
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupOptions()
+        getData()
     }
 
     fileprivate func setupUI() {
@@ -53,13 +58,38 @@ class OptionsVC: UINavigationController {
 
     
     func setupTagOption() -> UIView {
-//        let tagTextBox =
+        
         return tagOption.view
     }
     
+    //MARK: - Data
+    func getData() {
+        self.showLoadingView()
+        getAvailableTags()
+        dataGroup.notify(queue: .main) {
+            self.dismissLoadingView()
+        }
+    }
     
+    func getAvailableTags() {
+        dataGroup.enter()
+        NetworkingManager.shared.getAvailableTags { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let tags):
+                self.availableTags = tags
+            case .failure(_):
+                //TODO: handle oopsie...
+                break
+            }
+            self.dataGroup.leave()
+
+        }
+    }
 }
 
+
+//MARK: - CollectionView
 extension OptionsVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return options.count

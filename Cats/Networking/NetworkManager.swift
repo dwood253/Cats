@@ -24,7 +24,7 @@ class NetworkingManager {
                 completion(.success(catImage))
             } else {
                 print("Failed to get cat")
-                completion(.failure(nmError(message: "Failed to get Random Can Image")))
+                completion(.failure(nmError("Failed to get Random Can Image")))
             }
         }
     }
@@ -34,7 +34,19 @@ class NetworkingManager {
             if let data = response.data, let catImage = UIImage(data: data) {
                 completion(.success(catImage))
             } else {
-                completion(.failure(nmError(message: "Failed to get Random Can Image")))
+                completion(.failure(nmError("Failed to get Random Can Image")))
+            }
+        }
+    }
+    
+    func getAvailableTags(completion: @escaping(Result<[String], Error>) -> Void ) {
+        AF.request(NetworkingUrls.available_Tags, encoding: JSONEncoding.default).responseJSON { (response) in
+            switch response.result {
+            case .success(let data):
+                guard let tags = data as? [String] else { completion(.failure(nmError("Failed to parse tags"))); return }
+                completion(.success(tags))
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
     }
@@ -42,7 +54,7 @@ class NetworkingManager {
 
 class nmError: Error {
     var error: String
-    init(message: String) {
+    init(_ message: String) {
         self.error = message
     }
 }

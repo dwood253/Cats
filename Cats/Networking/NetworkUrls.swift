@@ -10,4 +10,6 @@ import Foundation
 
 struct NetworkingUrls {
     static let cat_Service_Base_Url = "https://cataas.com/cat"
+    static let cat_Service_API_Base = "https://cataas.com/api/"
+    static let available_Tags = cat_Service_API_Base + "tags"
 }
