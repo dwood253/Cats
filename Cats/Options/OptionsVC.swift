@@ -32,7 +32,56 @@ class OptionsVC: UINavigationController {
         let option = OptionContainerVC(labelText: "Gif", optionKey: .Gif, delegate: self)
         return option
     }()
+    
+    lazy var saysOption: OptionContainerVC = {
+        let option = OptionContainerVC(labelText: "Says", optionKey: .Says, delegate: self)
+        return option
+    }()
+    lazy var saysTextField: UITextField = {
+        let tf = UITextField()
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    lazy var sizeOption: OptionContainerVC = {
+        let option = OptionContainerVC(labelText: "Size", optionKey: .Says, delegate: self)
+        return option
+    }()
+    
+    lazy var sizeTextField: UITextField = {
+        let tf = UITextField()
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    lazy var filterOption: OptionContainerVC = {
+        let option = OptionContainerVC(labelText: "Filter", optionKey: .Says, delegate: self)
+        return option
+    }()
     let filters = ["blur", "mono", "sepia", "negative", "paint", "pixel"]
+    lazy var filterButton: UIButton = {
+       let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
+    }()
+    
+    lazy var widthHeightOption: OptionContainerVC = {
+        let option = OptionContainerVC(labelText: "Width/Height", optionKey: .Says, delegate: self)
+        return option
+    }()
+    
+    lazy var widthTextField: UITextField = {
+       let tf = UITextField()
+       tf.translatesAutoresizingMaskIntoConstraints = false
+       return tf
+    }()
+    
+    lazy var heightTextField: UITextField = {
+       let tf = UITextField()
+       tf.translatesAutoresizingMaskIntoConstraints = false
+       return tf
+    }()
+    
     
     var dataGroup = DispatchGroup()
     var cachedOptions = Session.data.options
@@ -58,13 +107,24 @@ class OptionsVC: UINavigationController {
         optionCollectionView.backgroundColor = .secondarySystemGroupedBackground
     }
     
-    func setupOptions() {
+    //Options
+    fileprivate func setupOptions() {
         guard let options = Session.data.options else { return }
+        //tag
         optionViews.append(setupTagOption(tag: options.tag))
+        //gif
         gifOption.checkBox.isChecked = (cachedOptions?.gif ?? false) ? true : false
         optionViews.append(gifOption.view)
-    }
+        //says
+        optionViews.append(setupSaysOption())
+        //size
+        optionViews.append(setupSizeOption())
+        //filter
+        optionViews.append(setupFilterOption(filter: options.filter))
+        //width/height
+        optionViews.append(setupWidthHeightOption())
 
+    }
     
     func setupTagOption(tag: String?) -> UIView {
         tagButton.translatesAutoresizingMaskIntoConstraints = false
@@ -83,6 +143,43 @@ class OptionsVC: UINavigationController {
             tagButton.setTitle(tag, for: .normal)
         }
         return tagOption.view
+    }
+    
+    
+    fileprivate func setupSaysOption() -> UIView{
+        
+        return saysOption.view
+    }
+    
+    fileprivate func setupSizeOption() -> UIView{
+        
+        return sizeOption.view
+    }
+    
+    fileprivate func setupFilterOption(filter: String?) -> UIView{
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
+        filterButton.addTarget(self, action: #selector(showFilterSelectorView), for: .touchUpInside)
+        filterButton.setTitleColor(.link, for: .normal)
+        filterButton.titleLabel?.font = .systemFont(ofSize: 14)
+        filterOption.view.addSubview(filterButton)
+        NSLayoutConstraint.activate([
+            filterButton.leadingAnchor.constraint(equalTo: filterOption.optionLabel.trailingAnchor),
+            filterButton.centerYAnchor.constraint(equalTo: filterOption.optionLabel.centerYAnchor),
+            filterButton.trailingAnchor.constraint(equalTo: filterOption.view.trailingAnchor, constant: -Constants.option_padding_right),
+            filterButton.heightAnchor.constraint(equalToConstant: Constants.labelHeight)
+        ])
+        if let filter = filter, !filter.isEmpty {
+            filterOption.checkBox.isChecked = true
+            filterButton.setTitle(filter, for: .normal)
+        } else {
+            filterButton.setTitle(filters[0], for: .normal)
+        }
+        return filterOption.view
+    }
+    
+    fileprivate func setupWidthHeightOption() -> UIView{
+        
+        return widthHeightOption.view
     }
     
     //MARK: - Data
@@ -125,11 +222,15 @@ class OptionsVC: UINavigationController {
     
     //MARK - Helpers
     @objc func showTagSelectorView() {
-        let tagSelector = TagSelectorVCViewController()
-        tagSelector.delegate = self
-        tagSelector.tagOptions = availableTags ?? []
+        let tagSelector = OptionSelectorVCViewController(optionType: .Tag, options: availableTags ?? [], delegate: self)
         tagSelector.modalPresentationStyle = .overFullScreen
         self.present(tagSelector, animated: true, completion: nil)
+    }
+    
+    @objc func showFilterSelectorView() {
+        let selector = OptionSelectorVCViewController(optionType: .Filter, options: filters, delegate: self)
+        selector.modalPresentationStyle = .overFullScreen
+        self.present(selector, animated: true, completion: nil)
     }
 }
 
@@ -171,32 +272,8 @@ class OptionCollectionViewCell: UICollectionViewCell {
     }
 }
 
-//MARK: PickerView
-extension OptionsVC: UIPickerViewDelegate, UIPickerViewDataSource {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        switch pickerView {
-        default:
-            return 0
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return availableTags?[row] ?? ""
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        guard let options = Session.data.options else { return }
-
-        Session.data.storeOptions()
-    }
-}
-
 extension OptionsVC: OptionSelectedDelegate {
-    func selectionChanged(key: OptionKey, selected: Bool) {
+    func selectionChanged(key: OptionType, selected: Bool) {
         guard let options = Session.data.options else { return }
         switch key {
         case .Tag:
@@ -208,6 +285,7 @@ extension OptionsVC: OptionSelectedDelegate {
         case .Size:
             break
         case .Filter:
+            options.filter = selected ? filterButton.titleLabel?.text ?? "" : nil
             break
         case .Width_Height:
             break
@@ -216,21 +294,32 @@ extension OptionsVC: OptionSelectedDelegate {
     }
 }
 
-extension OptionsVC: TagSelectedDelegate {
-    func tagSelected(tag: String) {
+extension OptionsVC: OptionValueChangedDelegate {
+    func optionValueChanged(optionValue: String, optionType: OptionType) {
         guard let options = Session.data.options else { return }
-        options.tag = tag
-        tagButton.setTitle(tag, for: .normal)
-        tagOption.checkBox.isChecked = true
+        
+        switch optionType {
+        case .Tag:
+            options.tag = optionValue
+            tagButton.setTitle(optionValue, for: .normal)
+            tagOption.checkBox.isChecked = true
+        case .Filter:
+            options.filter = optionValue
+            filterButton.setTitle(optionValue, for: .normal)
+            filterOption.checkBox.isChecked = true
+        default:
+            break
+        }
+        
         Session.data.storeOptions()
     }
 }
 
 protocol OptionSelectedDelegate {
-    func selectionChanged(key: OptionKey, selected: Bool)
+    func selectionChanged(key: OptionType, selected: Bool)
 }
 
-enum OptionKey {
+enum OptionType {
     case Tag
     case Gif
     case Says

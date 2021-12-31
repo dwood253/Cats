@@ -25,7 +25,7 @@ class CheckBox: UIViewController {
         }
     }
     var delegate: OptionSelectedDelegate!
-    var key: OptionKey!
+    var key: OptionType!
     
     convenience init(checked: Bool) {
         self.init()

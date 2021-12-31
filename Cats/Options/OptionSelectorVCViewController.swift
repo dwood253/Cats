@@ -9,11 +9,11 @@
 import UIKit
 
 fileprivate let TAG_CELL_ID = "tag_cell_id"
-class TagSelectorVCViewController: UIViewController {
+class OptionSelectorVCViewController: UIViewController {
 
-    var delegate: TagSelectedDelegate?
+    var delegate: OptionValueChangedDelegate!
     
-    lazy var tagsTable: UITableView = {
+    lazy var optionsTable: UITableView = {
         let table = UITableView(frame: CGRect.zero)
         table.translatesAutoresizingMaskIntoConstraints = false
         table.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: Constants.button_height + 10, right: 0)
@@ -38,19 +38,30 @@ class TagSelectorVCViewController: UIViewController {
         return btn
     }()
     
-    var tagOptions: [String] = [] {
+    var allOptions: [String] = [] {
         didSet {
-            filteredOptions = tagOptions
+            filteredOptions = allOptions
         }
     }
     
     var filteredOptions: [String] = [] {
         didSet {
-            tagsTable.reloadData()
+            optionsTable.reloadData()
         }
     }
     
+    var optionType: OptionType!
+    
     //MARK: - Lifecycle
+    
+    convenience init(optionType: OptionType, options: [String], delegate: OptionValueChangedDelegate) {
+        self.init()
+        self.optionType = optionType
+        self.allOptions = options
+        self.filteredOptions = options
+        self.delegate = delegate
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -63,19 +74,19 @@ class TagSelectorVCViewController: UIViewController {
     //MARK: - SetupUI
     func setupUI() {
         self.view.backgroundColor = .secondarySystemGroupedBackground
-        tagsTable.delegate = self
-        tagsTable.dataSource = self
-        tagsTable.register(UITableViewCell.self, forCellReuseIdentifier: TAG_CELL_ID)
+        optionsTable.delegate = self
+        optionsTable.dataSource = self
+        optionsTable.register(UITableViewCell.self, forCellReuseIdentifier: TAG_CELL_ID)
         searchView.delegate = self
-        self.view.addSubviews([searchView, tagsTable, cancelButton])
+        self.view.addSubviews([searchView, optionsTable, cancelButton])
         NSLayoutConstraint.activate([
             searchView.topAnchor.constraint(equalTo: self.view.topAnchor),
             searchView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             searchView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            tagsTable.topAnchor.constraint(equalTo: self.searchView.bottomAnchor),
-            tagsTable.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            tagsTable.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            tagsTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            optionsTable.topAnchor.constraint(equalTo: self.searchView.bottomAnchor),
+            optionsTable.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            optionsTable.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            optionsTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             cancelButton.heightAnchor.constraint(equalToConstant: Constants.button_height),
             cancelButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
             cancelButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
@@ -90,18 +101,18 @@ class TagSelectorVCViewController: UIViewController {
     
     func filterTags() {
         if let searchText = searchView.text?.trimmingCharacters(in: .whitespacesAndNewlines), !searchText.isEmpty {
-            filteredOptions = tagOptions.filter({ (option) -> Bool in
+            filteredOptions = allOptions.filter({ (option) -> Bool in
                 option.contains(searchText)
             })
         } else {
-            filteredOptions = tagOptions
+            filteredOptions = allOptions
         }
     }
     
 }
 
 //MARK: - UITableView
-extension TagSelectorVCViewController: UITableViewDelegate, UITableViewDataSource {
+extension OptionSelectorVCViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredOptions.count
     }
@@ -116,20 +127,14 @@ extension TagSelectorVCViewController: UITableViewDelegate, UITableViewDataSourc
     
     @objc func cellTapped(sender: UITapGestureRecognizer) {
         if let index = sender.view?.tag, let delegate = self.delegate {
-            delegate.tagSelected(tag: filteredOptions[index])
+            delegate.optionValueChanged(optionValue: filteredOptions[index], optionType: self.optionType)
             dismissSelf()
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let delegate = self.delegate {
-            delegate.tagSelected(tag: filteredOptions[indexPath.row])
         }
     }
 }
 
 //MARK: - UISearchBar
-extension TagSelectorVCViewController: UISearchBarDelegate {
+extension OptionSelectorVCViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterTags()
     }
@@ -137,10 +142,10 @@ extension TagSelectorVCViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchView.text = ""
         searchView.resignFirstResponder()
-        filteredOptions = tagOptions
+        filteredOptions = allOptions
     }
 }
 
-protocol TagSelectedDelegate {
-    func tagSelected(tag: String)
+protocol OptionValueChangedDelegate {
+    func optionValueChanged(optionValue: String, optionType: OptionType)
 }

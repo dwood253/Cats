@@ -24,9 +24,9 @@ class OptionContainerVC: UIViewController {
         return tf
     }()
     var delegate: OptionSelectedDelegate?
-    var optionKey: OptionKey?
+    var optionKey: OptionType?
     
-    convenience init(labelText: String, optionKey: OptionKey, delegate: OptionSelectedDelegate) {
+    convenience init(labelText: String, optionKey: OptionType, delegate: OptionSelectedDelegate) {
         self.init()
         self.optionLabel.text = labelText
         self.optionKey = optionKey
