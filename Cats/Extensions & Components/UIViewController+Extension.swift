@@ -26,4 +26,9 @@ extension UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
     }
+    
+    func showToast(_ message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        present(alert, animated: true, completion: nil)
+    }
 }

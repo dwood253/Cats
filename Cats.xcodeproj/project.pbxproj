@@ -28,6 +28,7 @@
 		65E8E441277D76B400C3B823 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E440277D76B400C3B823 /* UIViewController+Extension.swift */; };
 		65E8E443277D809200C3B823 /* OptionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E442277D809200C3B823 /* OptionsModel.swift */; };
 		65E8E446277D82A400C3B823 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E445277D82A400C3B823 /* Session.swift */; };
+		65E8E448277EBFE000C3B823 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E447277EBFE000C3B823 /* UITextField+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		65E8E440277D76B400C3B823 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		65E8E442277D809200C3B823 /* OptionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsModel.swift; sourceTree = "<group>"; };
 		65E8E445277D82A400C3B823 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		65E8E447277EBFE000C3B823 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 				65E8E440277D76B400C3B823 /* UIViewController+Extension.swift */,
 				65520D09277C1BA00029C704 /* catLabel.swift */,
 				65E8E43D277C399200C3B823 /* Constants.swift */,
+				65E8E447277EBFE000C3B823 /* UITextField+Extension.swift */,
 			);
 			path = "Extensions & Components";
 			sourceTree = "<group>";
@@ -293,6 +296,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65E8E448277EBFE000C3B823 /* UITextField+Extension.swift in Sources */,
 				65E8E441277D76B400C3B823 /* UIViewController+Extension.swift in Sources */,
 				65B906A227742E5100F8AB1F /* NetworkManager.swift in Sources */,
 				65E8E443277D809200C3B823 /* OptionsModel.swift in Sources */,

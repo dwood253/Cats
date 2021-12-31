@@ -12,7 +12,7 @@ fileprivate let OPTIONS_KEY = "options_key"
 
 class Session {
     static let data = Session()
-    var options: OptionsModel? {
+    var options: OptionsModel! {
         didSet {
             storeOptions()
         }

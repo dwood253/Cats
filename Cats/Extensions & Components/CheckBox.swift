@@ -24,17 +24,13 @@ class CheckBox: UIViewController {
             setImage()
         }
     }
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+    var delegate: OptionSelectedDelegate!
+    var key: OptionKey!
     
     convenience init(checked: Bool) {
         self.init()
         self.isChecked = checked
+        self.delegate = delegate
     }
     
     init() {
@@ -71,6 +67,7 @@ class CheckBox: UIViewController {
     }
     
     @objc func toggleChecked() {
-        self.isChecked.toggle()
+        isChecked.toggle()
+        delegate.selectionChanged(key: key, selected: isChecked)
     }
 }

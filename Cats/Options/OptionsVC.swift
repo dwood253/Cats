@@ -18,10 +18,10 @@ class OptionsVC: UINavigationController {
         return cv
     }()
     
-    lazy var options: [UIView] = []
+    lazy var optionViews: [UIView] = []
     
     lazy var tagOption: OptionContainerVC = {
-        let option = OptionContainerVC(labelText: "Tag")
+        let option = OptionContainerVC(labelText: "Tag", optionKey: .Tag, delegate: self)
         return option
     }()
     let tagPicker = UIPickerView()
@@ -30,12 +30,12 @@ class OptionsVC: UINavigationController {
     var availableTags: [String]?
     
     lazy var gifOption: OptionContainerVC = {
-        let option = OptionContainerVC(labelText: "Gif")
+        let option = OptionContainerVC(labelText: "Gif", optionKey: .Gif, delegate: self)
         return option
     }()
     
     var dataGroup = DispatchGroup()
-    
+    var cachedOptions = Session.data.options
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,25 +54,33 @@ class OptionsVC: UINavigationController {
     }
     
     func setupOptions() {
-        options.append(setupTagOption())
-        options.append(gifOption.view)
+        guard let options = Session.data.options else { return }
+        optionViews.append(setupTagOption(tag: options.tag))
+        gifOption.checkBox.isChecked = (cachedOptions?.gif ?? false) ? true : false
+        optionViews.append(gifOption.view)
     }
 
     
-    func setupTagOption() -> UIView {
+    func setupTagOption(tag: String?) -> UIView {
         tagPicker.delegate = self
         tagPicker.dataSource = self
         tagTextView.translatesAutoresizingMaskIntoConstraints = false
         tagTextView.inputView = tagPicker
+        tagTextView.textColor = .link
+        tagTextView.font = .systemFont(ofSize: 14)
+        tagTextView.text = "(none)"
         tagTextView.tintColor = .clear
         tagOption.view.addSubview(tagTextView)
         NSLayoutConstraint.activate([
             tagTextView.leadingAnchor.constraint(equalTo: tagOption.optionLabel.trailingAnchor),
-            tagTextView.centerYAnchor.constraint(equalTo: tagOption.view.centerYAnchor),
+            tagTextView.centerYAnchor.constraint(equalTo: tagOption.optionLabel.centerYAnchor),
             tagTextView.trailingAnchor.constraint(equalTo: tagOption.view.trailingAnchor),
             tagTextView.heightAnchor.constraint(equalToConstant: Constants.labelHeight)
         ])
-        
+        if let tag = tag, !tag.isEmpty {
+            tagOption.checkBox.isChecked = true
+            tagTextView.text = tag
+        }
         return tagOption.view
     }
     
@@ -81,6 +89,11 @@ class OptionsVC: UINavigationController {
         self.showLoadingView()
         getAvailableTags()
         dataGroup.notify(queue: .main) {
+            if let options = Session.data.options {
+                if let tag = options.tag, let selectedIndex = self.availableTags?.firstIndex(of: tag) {
+                    self.tagPicker.selectRow(selectedIndex, inComponent: 0, animated: false)
+                }
+            }
             self.dismissLoadingView()
         }
     }
@@ -105,12 +118,12 @@ class OptionsVC: UINavigationController {
 //MARK: - CollectionView
 extension OptionsVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return options.count
+        return optionViews.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OPTION_CELL_ID, for: indexPath) as! OptionCollectionViewCell
-        cell.option = options[indexPath.row]
+        cell.option = optionViews[indexPath.row]
         return cell
     }
     
@@ -159,13 +172,57 @@ extension OptionsVC: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.tagTextView.text = availableTags?[row] ?? ""
+        guard let options = Session.data.options else { return }
+        if row > 0 {
+            self.tagOption.checkBox.isChecked = true
+            self.tagTextView.text = availableTags![row]
+            options.tag = availableTags![row]
+        } else {
+            self.tagOption.checkBox.isChecked = false
+            self.tagTextView.text = "(none)"
+            options.tag = nil
+        }
         self.tagTextView.resignFirstResponder()
+        Session.data.storeOptions()
     }
 }
 
-protocol OptionSelected {
-    func isSelected() -> Bool
+extension OptionsVC: OptionSelectedDelegate {
+    func selectionChanged(key: OptionKey, selected: Bool) {
+        guard let options = Session.data.options else { return }
+        switch key {
+        case .Tag:
+            if tagTextView.text.elementsEqual("(none)") {
+                self.tagTextView.becomeFirstResponder()
+            } else {
+                options.tag = tagTextView.text
+            }
+        case .Gif:
+            options.gif = selected
+        case .Says:
+            break
+        case .Size:
+            break
+        case .Filter:
+            break
+        case .Width_Height:
+            break
+        }
+        Session.data.storeOptions()
+    }
+}
+
+protocol OptionSelectedDelegate {
+    func selectionChanged(key: OptionKey, selected: Bool)
+}
+
+enum OptionKey {
+    case Tag
+    case Gif
+    case Says
+    case Size
+    case Filter
+    case Width_Height
 }
 
 

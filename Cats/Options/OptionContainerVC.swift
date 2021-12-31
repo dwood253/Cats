@@ -20,12 +20,18 @@ class OptionContainerVC: UIViewController {
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.heightAnchor.constraint(equalToConstant: Constants.labelHeight).isActive = true
         tf.layer.cornerRadius = Constants.fieldCornerRadius
+        tf.font = .systemFont(ofSize: 14)
         return tf
     }()
+    var delegate: OptionSelectedDelegate?
+    var optionKey: OptionKey?
     
-    convenience init(labelText: String) {
+    convenience init(labelText: String, optionKey: OptionKey, delegate: OptionSelectedDelegate) {
         self.init()
         self.optionLabel.text = labelText
+        self.optionKey = optionKey
+        self.checkBox.delegate = delegate
+        self.checkBox.key = self.optionKey
     }
     
     override func viewDidLoad() {
@@ -47,10 +53,3 @@ class OptionContainerVC: UIViewController {
 
 }
 
-extension OptionContainerVC: OptionSelected {
-    func isSelected() -> Bool {
-        return false
-    }
-    
-    
-}
