@@ -7,8 +7,6 @@
 //
 
 import UIKit
-extension UITextField {
-    override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        return false
-    }
+extension UIButton {
+    override open var canBecomeFirstResponder: Bool { return true }
 }

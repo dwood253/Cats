@@ -29,6 +29,7 @@
 		65E8E443277D809200C3B823 /* OptionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E442277D809200C3B823 /* OptionsModel.swift */; };
 		65E8E446277D82A400C3B823 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E445277D82A400C3B823 /* Session.swift */; };
 		65E8E448277EBFE000C3B823 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E447277EBFE000C3B823 /* UITextField+Extension.swift */; };
+		65E8E44A277ED97B00C3B823 /* TagSelectorVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E449277ED97B00C3B823 /* TagSelectorVCViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		65E8E442277D809200C3B823 /* OptionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsModel.swift; sourceTree = "<group>"; };
 		65E8E445277D82A400C3B823 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		65E8E447277EBFE000C3B823 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
+		65E8E449277ED97B00C3B823 /* TagSelectorVCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectorVCViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 				65520D01277C18A10029C704 /* OptionsVC.swift */,
 				656F2948277C304800D359B8 /* OptionContainerVC.swift */,
 				65E8E442277D809200C3B823 /* OptionsModel.swift */,
+				65E8E449277ED97B00C3B823 /* TagSelectorVCViewController.swift */,
 			);
 			path = Options;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 				65E8E43E277C399200C3B823 /* Constants.swift in Sources */,
 				65E8E446277D82A400C3B823 /* Session.swift in Sources */,
 				65B9053E2773EF5000F8AB1F /* MainVC.swift in Sources */,
+				65E8E44A277ED97B00C3B823 /* TagSelectorVCViewController.swift in Sources */,
 				656F2945277C21FE00D359B8 /* MainTBC.swift in Sources */,
 				65520D0A277C1BA00029C704 /* catLabel.swift in Sources */,
 				65B9053A2773EF5000F8AB1F /* AppDelegate.swift in Sources */,

@@ -24,8 +24,7 @@ class OptionsVC: UINavigationController {
         let option = OptionContainerVC(labelText: "Tag", optionKey: .Tag, delegate: self)
         return option
     }()
-    let tagPicker = UIPickerView()
-    let tagTextView = UITextView()
+    let tagButton = UIButton()
     
     var availableTags: [String]?
     
@@ -33,6 +32,7 @@ class OptionsVC: UINavigationController {
         let option = OptionContainerVC(labelText: "Gif", optionKey: .Gif, delegate: self)
         return option
     }()
+    let filters = ["blur", "mono", "sepia", "negative", "paint", "pixel"]
     
     var dataGroup = DispatchGroup()
     var cachedOptions = Session.data.options
@@ -44,6 +44,11 @@ class OptionsVC: UINavigationController {
         getData()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
+    
     fileprivate func setupUI() {
         self.view.addSubview(optionCollectionView)
         optionCollectionView.fillSuperView()
@@ -62,24 +67,20 @@ class OptionsVC: UINavigationController {
 
     
     func setupTagOption(tag: String?) -> UIView {
-        tagPicker.delegate = self
-        tagPicker.dataSource = self
-        tagTextView.translatesAutoresizingMaskIntoConstraints = false
-        tagTextView.inputView = tagPicker
-        tagTextView.textColor = .link
-        tagTextView.font = .systemFont(ofSize: 14)
-        tagTextView.text = "(none)"
-        tagTextView.tintColor = .clear
-        tagOption.view.addSubview(tagTextView)
+        tagButton.translatesAutoresizingMaskIntoConstraints = false
+        tagButton.addTarget(self, action: #selector(showTagSelectorView), for: .touchUpInside)
+        tagButton.setTitleColor(.link, for: .normal)
+        tagButton.titleLabel?.font = .systemFont(ofSize: 14)
+        tagOption.view.addSubview(tagButton)
         NSLayoutConstraint.activate([
-            tagTextView.leadingAnchor.constraint(equalTo: tagOption.optionLabel.trailingAnchor),
-            tagTextView.centerYAnchor.constraint(equalTo: tagOption.optionLabel.centerYAnchor),
-            tagTextView.trailingAnchor.constraint(equalTo: tagOption.view.trailingAnchor),
-            tagTextView.heightAnchor.constraint(equalToConstant: Constants.labelHeight)
+            tagButton.leadingAnchor.constraint(equalTo: tagOption.optionLabel.trailingAnchor),
+            tagButton.centerYAnchor.constraint(equalTo: tagOption.optionLabel.centerYAnchor),
+            tagButton.trailingAnchor.constraint(equalTo: tagOption.view.trailingAnchor, constant: -Constants.option_padding_right),
+            tagButton.heightAnchor.constraint(equalToConstant: Constants.labelHeight)
         ])
         if let tag = tag, !tag.isEmpty {
             tagOption.checkBox.isChecked = true
-            tagTextView.text = tag
+            tagButton.setTitle(tag, for: .normal)
         }
         return tagOption.view
     }
@@ -90,8 +91,13 @@ class OptionsVC: UINavigationController {
         getAvailableTags()
         dataGroup.notify(queue: .main) {
             if let options = Session.data.options {
-                if let tag = options.tag, let selectedIndex = self.availableTags?.firstIndex(of: tag) {
-                    self.tagPicker.selectRow(selectedIndex, inComponent: 0, animated: false)
+                if let tag = options.tag, self.availableTags?.contains(tag) ?? false {
+                    self.tagButton.setTitle(tag, for: .normal)
+                } else {
+                    //cached tag is no longer available or no tag cached
+                    options.tag = nil
+                    self.tagButton.setTitle(self.availableTags?[0] ?? "", for: .normal)
+                    Session.data.storeOptions()
                 }
             }
             self.dismissLoadingView()
@@ -105,12 +111,25 @@ class OptionsVC: UINavigationController {
             switch result {
             case .success(let tags):
                 self.availableTags = tags
+                //remove unecessary empty tag
+                if let first = self.availableTags?[0], first.isEmpty {
+                    self.availableTags?.remove(at: 0)
+                }
             case .failure(_):
                 //TODO: handle oopsie...
                 break
             }
             self.dataGroup.leave()
         }
+    }
+    
+    //MARK - Helpers
+    @objc func showTagSelectorView() {
+        let tagSelector = TagSelectorVCViewController()
+        tagSelector.delegate = self
+        tagSelector.tagOptions = availableTags ?? []
+        tagSelector.modalPresentationStyle = .overFullScreen
+        self.present(tagSelector, animated: true, completion: nil)
     }
 }
 
@@ -160,8 +179,6 @@ extension OptionsVC: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         switch pickerView {
-        case tagPicker:
-            return availableTags?.count ?? 0
         default:
             return 0
         }
@@ -173,16 +190,7 @@ extension OptionsVC: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         guard let options = Session.data.options else { return }
-        if row > 0 {
-            self.tagOption.checkBox.isChecked = true
-            self.tagTextView.text = availableTags![row]
-            options.tag = availableTags![row]
-        } else {
-            self.tagOption.checkBox.isChecked = false
-            self.tagTextView.text = "(none)"
-            options.tag = nil
-        }
-        self.tagTextView.resignFirstResponder()
+
         Session.data.storeOptions()
     }
 }
@@ -192,11 +200,7 @@ extension OptionsVC: OptionSelectedDelegate {
         guard let options = Session.data.options else { return }
         switch key {
         case .Tag:
-            if tagTextView.text.elementsEqual("(none)") {
-                self.tagTextView.becomeFirstResponder()
-            } else {
-                options.tag = tagTextView.text
-            }
+            options.tag = selected ? tagButton.titleLabel?.text ?? "" : nil
         case .Gif:
             options.gif = selected
         case .Says:
@@ -208,6 +212,16 @@ extension OptionsVC: OptionSelectedDelegate {
         case .Width_Height:
             break
         }
+        Session.data.storeOptions()
+    }
+}
+
+extension OptionsVC: TagSelectedDelegate {
+    func tagSelected(tag: String) {
+        guard let options = Session.data.options else { return }
+        options.tag = tag
+        tagButton.setTitle(tag, for: .normal)
+        tagOption.checkBox.isChecked = true
         Session.data.storeOptions()
     }
 }

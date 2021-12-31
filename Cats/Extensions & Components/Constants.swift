@@ -16,4 +16,11 @@ struct Constants {
     //Text Fields
     static let fieldCornerRadius: CGFloat = 6
     static let textMargin: CGFloat = 10
+    
+    //Option Padding
+    static let option_padding_right: CGFloat = 10
+    
+    //Button
+    static let button_height: CGFloat = 30
+    static let button_corner_radius: CGFloat = 6
 }
