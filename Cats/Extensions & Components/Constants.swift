@@ -23,4 +23,6 @@ struct Constants {
     //Button
     static let button_height: CGFloat = 30
     static let button_corner_radius: CGFloat = 6
+    
+    static let filters = ["blur", "mono", "sepia", "negative", "paint", "pixel"]
 }

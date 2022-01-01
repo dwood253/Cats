@@ -33,7 +33,7 @@ class OptionSelectorVCViewController: UIViewController {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.layer.cornerRadius = Constants.button_corner_radius
         btn.backgroundColor = .cyan
-        btn.setTitle("Cancel", for: .normal)
+        btn.setTitle("Dismiss", for: .normal)
         btn.addTarget(self, action: #selector(dismissSelf), for: .touchUpInside)
         return btn
     }()

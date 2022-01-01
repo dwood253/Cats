@@ -30,6 +30,7 @@
 		65E8E446277D82A400C3B823 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E445277D82A400C3B823 /* Session.swift */; };
 		65E8E448277EBFE000C3B823 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E447277EBFE000C3B823 /* UITextField+Extension.swift */; };
 		65E8E44A277ED97B00C3B823 /* OptionSelectorVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E449277ED97B00C3B823 /* OptionSelectorVCViewController.swift */; };
+		65E8E44C277FAF2700C3B823 /* FilterSelectorTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E44B277FAF2700C3B823 /* FilterSelectorTVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		65E8E445277D82A400C3B823 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		65E8E447277EBFE000C3B823 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
 		65E8E449277ED97B00C3B823 /* OptionSelectorVCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorVCViewController.swift; sourceTree = "<group>"; };
+		65E8E44B277FAF2700C3B823 /* FilterSelectorTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSelectorTVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 				656F2948277C304800D359B8 /* OptionContainerVC.swift */,
 				65E8E442277D809200C3B823 /* OptionsModel.swift */,
 				65E8E449277ED97B00C3B823 /* OptionSelectorVCViewController.swift */,
+				65E8E44B277FAF2700C3B823 /* FilterSelectorTVC.swift */,
 			);
 			path = Options;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 				65E8E448277EBFE000C3B823 /* UITextField+Extension.swift in Sources */,
 				65E8E441277D76B400C3B823 /* UIViewController+Extension.swift in Sources */,
 				65B906A227742E5100F8AB1F /* NetworkManager.swift in Sources */,
+				65E8E44C277FAF2700C3B823 /* FilterSelectorTVC.swift in Sources */,
 				65E8E443277D809200C3B823 /* OptionsModel.swift in Sources */,
 				65520D08277C19A90029C704 /* CatVC.swift in Sources */,
 				65B905442773EF5000F8AB1F /* Cats.xcdatamodeld in Sources */,

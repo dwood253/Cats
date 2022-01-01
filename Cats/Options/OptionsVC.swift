@@ -58,7 +58,7 @@ class OptionsVC: UINavigationController {
         let option = OptionContainerVC(labelText: "Filter", optionKey: .Says, delegate: self)
         return option
     }()
-    let filters = ["blur", "mono", "sepia", "negative", "paint", "pixel"]
+    
     lazy var filterButton: UIButton = {
        let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -172,7 +172,7 @@ class OptionsVC: UINavigationController {
             filterOption.checkBox.isChecked = true
             filterButton.setTitle(filter, for: .normal)
         } else {
-            filterButton.setTitle(filters[0], for: .normal)
+            filterButton.setTitle(Constants.filters[0], for: .normal)
         }
         return filterOption.view
     }
@@ -228,7 +228,11 @@ class OptionsVC: UINavigationController {
     }
     
     @objc func showFilterSelectorView() {
-        let selector = OptionSelectorVCViewController(optionType: .Filter, options: filters, delegate: self)
+//        let selector = OptionSelectorVCViewController(optionType: .Filter, options: Constants.filters, delegate: self)
+//        selector.modalPresentationStyle = .overFullScreen
+//        self.present(selector, animated: true, completion: nil)
+        
+        let selector = FilterSelectorTVC(delegate: self)
         selector.modalPresentationStyle = .overFullScreen
         self.present(selector, animated: true, completion: nil)
     }
