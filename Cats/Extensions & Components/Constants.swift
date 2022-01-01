@@ -11,18 +11,28 @@ import UIKit
 
 struct Constants {
     static let checkBoxSideMargin: CGFloat = 10
-    static let labelHeight: CGFloat = 30
+    
+    //Labels
+    static let label_height: CGFloat = 30
+    static let label_color: UIColor = .label
+    static let label_padding: CGFloat = 6	
     
     //Text Fields
-    static let fieldCornerRadius: CGFloat = 6
-    static let textMargin: CGFloat = 10
+    static let field_corner_radius: CGFloat = 6
+    static let text_margin: CGFloat = 10
     
     //Option Padding
     static let option_padding_right: CGFloat = 10
     
+    //Filters
+    static let filters = ["blur", "mono", "sepia", "negative", "paint", "pixel"]
+    
     //Button
     static let button_height: CGFloat = 30
     static let button_corner_radius: CGFloat = 6
+    static let button_color: UIColor = .cyan
+    static let button_title_color: UIColor = .black
+    static let button_title_font_size: CGFloat = 14
+    static let button_padding: CGFloat = 10
     
-    static let filters = ["blur", "mono", "sepia", "negative", "paint", "pixel"]
 }

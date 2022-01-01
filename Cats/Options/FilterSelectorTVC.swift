@@ -22,16 +22,10 @@ class FilterSelectorTVC: UIViewController {
         return table
     }()
    
-    lazy var cancelButton: UIButton = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.layer.cornerRadius = Constants.button_corner_radius
-        btn.backgroundColor = .cyan
-        btn.setTitleColor(.black, for: .normal)
+    lazy var cancelButton: catButton = {
+        let btn = catButton()
         btn.setTitle("Dismiss", for: .normal)
         btn.addTarget(self, action: #selector(dismissSelf), for: .touchUpInside)
-        btn.titleLabel!.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-        btn.contentEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
         return btn
     }()
     

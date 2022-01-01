@@ -9,9 +9,13 @@
 import UIKit
 
 class catLabel: UILabel {
-    init(text: String? = "", fontSize: Int16 = 10, textColor: UIColor = .black) {
+    init(text: String? = "", fontSize: Int16 = 10, textColor: UIColor = Constants.label_color, alignment: NSTextAlignment = .left) {
         super.init(frame: CGRect.zero)
-        
+        self.text = text
+        self.font = UIFont.systemFont(ofSize: 14)
+        self.textColor = textColor
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.textAlignment = alignment
     }
     
     required init?(coder: NSCoder) {

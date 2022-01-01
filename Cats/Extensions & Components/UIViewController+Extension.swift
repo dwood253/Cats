@@ -20,12 +20,6 @@ extension UIViewController {
         alert.view.tag = ALERT_TAG
         present(alert, animated: true, completion: nil)
     }
-    
-    func makeEveryBackgroundClear(view: UIView) {
-        for subview in view.subviews {
-            makeEveryBackgroundClear(view: subview)
-        }
-    }
     	
     func dismissLoadingView() {
         DispatchQueue.main.async {

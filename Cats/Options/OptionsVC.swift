@@ -9,6 +9,11 @@
 import UIKit
 fileprivate let OPTION_CELL_ID = "option_cell_id"
 
+
+protocol OptionSelectedDelegate {
+    func selectionChanged(key: OptionType, selected: Bool)
+}
+
 class OptionsVC: UINavigationController {
     
     lazy var optionCollectionView: UICollectionView = {
@@ -37,11 +42,7 @@ class OptionsVC: UINavigationController {
         let option = OptionContainerVC(labelText: "Says", optionKey: .Says, delegate: self)
         return option
     }()
-    lazy var saysTextField: UITextField = {
-        let tf = UITextField()
-        tf.translatesAutoresizingMaskIntoConstraints = false
-        return tf
-    }()
+    lazy var saysButton = UIButton()
     
     lazy var sizeOption: OptionContainerVC = {
         let option = OptionContainerVC(labelText: "Size", optionKey: .Says, delegate: self)
@@ -116,7 +117,7 @@ class OptionsVC: UINavigationController {
         gifOption.checkBox.isChecked = (cachedOptions?.gif ?? false) ? true : false
         optionViews.append(gifOption.view)
         //says
-        optionViews.append(setupSaysOption())
+        optionViews.append(setupSaysOption(says: options.says))
         //size
         optionViews.append(setupSizeOption())
         //filter
@@ -136,7 +137,7 @@ class OptionsVC: UINavigationController {
             tagButton.leadingAnchor.constraint(equalTo: tagOption.optionLabel.trailingAnchor),
             tagButton.centerYAnchor.constraint(equalTo: tagOption.optionLabel.centerYAnchor),
             tagButton.trailingAnchor.constraint(equalTo: tagOption.view.trailingAnchor, constant: -Constants.option_padding_right),
-            tagButton.heightAnchor.constraint(equalToConstant: Constants.labelHeight)
+            tagButton.heightAnchor.constraint(equalToConstant: Constants.label_height)
         ])
         if let tag = tag, !tag.isEmpty {
             tagOption.checkBox.isChecked = true
@@ -146,8 +147,24 @@ class OptionsVC: UINavigationController {
     }
     
     
-    fileprivate func setupSaysOption() -> UIView{
-        
+    fileprivate func setupSaysOption(says: String?) -> UIView{
+        saysButton.translatesAutoresizingMaskIntoConstraints = false
+        saysButton.addTarget(self, action: #selector(showSaysInputView), for: .touchUpInside)
+        saysButton.setTitleColor(.link, for: .normal)
+        saysButton.titleLabel?.font = .systemFont(ofSize: 14)
+        saysOption.view.addSubview(saysButton)
+        NSLayoutConstraint.activate([
+            saysButton.leadingAnchor.constraint(equalTo: saysOption.optionLabel.trailingAnchor),
+            saysButton.centerYAnchor.constraint(equalTo: saysOption.optionLabel.centerYAnchor),
+            saysButton.trailingAnchor.constraint(equalTo: saysOption.view.trailingAnchor, constant: -Constants.option_padding_right),
+            saysButton.heightAnchor.constraint(equalToConstant: Constants.label_height)
+        ])
+        if let saysStr = says, !saysStr.isEmpty {
+            saysOption.checkBox.isChecked = true
+            saysButton.setTitle(saysStr, for: .normal)
+        } else {
+            saysButton.setTitle("Hello, World!", for: .normal)
+        }
         return saysOption.view
     }
     
@@ -166,7 +183,7 @@ class OptionsVC: UINavigationController {
             filterButton.leadingAnchor.constraint(equalTo: filterOption.optionLabel.trailingAnchor),
             filterButton.centerYAnchor.constraint(equalTo: filterOption.optionLabel.centerYAnchor),
             filterButton.trailingAnchor.constraint(equalTo: filterOption.view.trailingAnchor, constant: -Constants.option_padding_right),
-            filterButton.heightAnchor.constraint(equalToConstant: Constants.labelHeight)
+            filterButton.heightAnchor.constraint(equalToConstant: Constants.label_height)
         ])
         if let filter = filter, !filter.isEmpty {
             filterOption.checkBox.isChecked = true
@@ -220,7 +237,7 @@ class OptionsVC: UINavigationController {
         }
     }
     
-    //MARK - Helpers
+    //MARK: - Helpers
     @objc func showTagSelectorView() {
         let tagSelector = OptionSelectorVCViewController(optionType: .Tag, options: availableTags ?? [], delegate: self)
         tagSelector.modalPresentationStyle = .overFullScreen
@@ -228,13 +245,15 @@ class OptionsVC: UINavigationController {
     }
     
     @objc func showFilterSelectorView() {
-//        let selector = OptionSelectorVCViewController(optionType: .Filter, options: Constants.filters, delegate: self)
-//        selector.modalPresentationStyle = .overFullScreen
-//        self.present(selector, animated: true, completion: nil)
-        
         let selector = FilterSelectorTVC(delegate: self)
         selector.modalPresentationStyle = .overFullScreen
         self.present(selector, animated: true, completion: nil)
+    }
+    
+    @objc func showSaysInputView() {
+        let inputView = OptionInputVC(inputTitles: ["Caption Text"], inputValues: [saysButton.titleLabel?.text ?? ""], type: .Says, delegate: self)
+        inputView.modalPresentationStyle = .overFullScreen
+        self.present(inputView, animated: true, completion: nil)
     }
 }
 
@@ -253,6 +272,21 @@ extension OptionsVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width:  CGFloat(min(self.view.frame.size.height, self.view.frame.size.width)), height: 30)
+    }
+}
+
+//MARK: - OptionsInputDelegate
+
+extension OptionsVC: OptionsInputDelegate {
+    func finishedChangingOption(fieldValues: [String], option: OptionType) {
+        guard let options = Session.data.options else { return }
+        switch option {
+        case .Says:
+            options.says = !fieldValues.isEmpty ? fieldValues[0] : nil
+        default:
+            break
+        }
+        Session.data.storeOptions()
     }
 }
 
@@ -319,9 +353,6 @@ extension OptionsVC: OptionValueChangedDelegate {
     }
 }
 
-protocol OptionSelectedDelegate {
-    func selectionChanged(key: OptionType, selected: Bool)
-}
 
 enum OptionType {
     case Tag

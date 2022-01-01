@@ -18,8 +18,8 @@ class OptionContainerVC: UIViewController {
     lazy var optionLabel: UILabel = {
        let tf = UILabel()
         tf.translatesAutoresizingMaskIntoConstraints = false
-        tf.heightAnchor.constraint(equalToConstant: Constants.labelHeight).isActive = true
-        tf.layer.cornerRadius = Constants.fieldCornerRadius
+        tf.heightAnchor.constraint(equalToConstant: Constants.label_height).isActive = true
+        tf.layer.cornerRadius = Constants.field_corner_radius
         tf.font = .systemFont(ofSize: 14)
         return tf
     }()
