@@ -283,6 +283,7 @@ extension OptionsVC: OptionsInputDelegate {
         switch option {
         case .Says:
             options.says = !fieldValues.isEmpty ? fieldValues[0] : nil
+            saysButton.setTitle(options.says ?? "Hello, World!", for: .normal    )
         default:
             break
         }

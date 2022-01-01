@@ -30,5 +30,10 @@ extension UIViewController {
     func showToast(_ message: String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         present(alert, animated: true, completion: nil)
+        self.perform(#selector(dismissToast), with: nil, afterDelay: 1)
+    }
+    
+    @objc func dismissToast() {
+        self.dismiss(animated: true, completion: nil)
     }
 }

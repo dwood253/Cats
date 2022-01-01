@@ -30,4 +30,16 @@ class catTextField: UITextField {
         return super.shouldChangeText(in: range, replacementText: text)
     }
     
+    
+    func addDoneButton() {
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 30))
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneEditing))
+        toolbar.items = [flexSpace, doneButton]
+        self.inputAccessoryView = toolbar
+    }
+    
+    @objc func doneEditing() {
+        self.resignFirstResponder()
+    }
 }

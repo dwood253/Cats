@@ -15,6 +15,7 @@ protocol OptionsInputDelegate {
 class OptionInputVC: UIViewController {
     var inputTitles: [String] = []
     var inputValues: [String] = []
+    var inputFields: [catTextField] = []
     var numbersOnly: Bool = false
     var optionType: OptionType!
     var delegate: OptionsInputDelegate?
@@ -62,10 +63,12 @@ class OptionInputVC: UIViewController {
         self.view.backgroundColor = UIColor.secondarySystemGroupedBackground.withAlphaComponent(0.8)
         self.view.addSubviews([valueStack, doneButton, cancelButton])
         NSLayoutConstraint.activate([
-            valueStack.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            valueStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+//            valueStack.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            valueStack.topAnchor.constraint(equalTo: self.view.topAnchor),
+            valueStack.bottomAnchor.constraint(lessThanOrEqualTo: cancelButton.topAnchor),
             valueStack.widthAnchor.constraint(lessThanOrEqualTo: self.view.widthAnchor),
-            
+            valueStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+
             cancelButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: Constants.button_padding),
             cancelButton.trailingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -(Constants.button_padding/2)),
             cancelButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.button_padding),
@@ -82,8 +85,9 @@ class OptionInputVC: UIViewController {
         for i in 0..<inputTitles.count {
             let label = catLabel(text: inputTitles[i], alignment: .center)
             let inputField = catTextField(initialValue: inputValues[i], numbersOnly: self.numbersOnly, alignment: .center)
-            inputField.backgroundColor = .secondarySystemBackground	
-            inputField.tag = i
+            inputField.addDoneButton()
+            inputField.backgroundColor = .secondarySystemBackground
+            inputFields.append(inputField)
             let container = UIView()
             container.addSubviews([label, inputField])
             NSLayoutConstraint.activate([
@@ -95,14 +99,31 @@ class OptionInputVC: UIViewController {
                 inputField.centerXAnchor.constraint(equalTo: container.centerXAnchor),
                 inputField.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: Constants.text_margin),
                 inputField.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -Constants.text_margin),
-                inputField.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -Constants.text_margin)
+                inputField.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -Constants.text_margin),
+                inputField.widthAnchor.constraint(greaterThanOrEqualToConstant: 100)
             ])
             valueStack.addArrangedSubview(container)
         }
     }
     
     @objc func validateAndSubmit() {
+        var inputValid = true
+        for i in 0..<inputFields.count {
+            if let input = inputFields[i].text, !input.trimmingCharacters(in: .whitespaces).isEmpty {
+                inputValues[i] = input.trimmingCharacters(in: .whitespaces)
+            } else {
+                inputValid = false
+                break
+            }
+        }
         
+        if inputValid {
+            guard let delegate = self.delegate else { return }
+            delegate.finishedChangingOption(fieldValues: inputValues, option: optionType)
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            showToast("Uh Oh! Please make sure to fill out the options!")
+        }
     }
     
     @objc func dismissSelf() {
