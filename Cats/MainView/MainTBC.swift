@@ -23,7 +23,6 @@ class MainTBC: UITabBarController {
         self.viewControllers = [
         getBarItem(title: "Cats", itemVC: MainVC(), imageName: "star"),
         getBarItem(title: "Options", itemVC: OptionsVC(), imageName: "slider.horizontal.3"),
-        getBarItem(title: "Tags", itemVC: TagExplorerVC(), imageName: "t.circle")
         ]
         self.selectedIndex = 0
     }
@@ -34,16 +33,5 @@ class MainTBC: UITabBarController {
         itemVC.tabBarItem = item
         return itemVC
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

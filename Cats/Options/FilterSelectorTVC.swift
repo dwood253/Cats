@@ -106,7 +106,7 @@ extension FilterSelectorTVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FILTER_CELL_ID, for: indexPath) as! FilterSelectorTVCell
         let url = NetworkingUrls.filter_Sample_Cat + Constants.filters[indexPath.section]
-        NetworkingManager.shared.getSpecificCat(url: url) { result in
+        NetworkingManager.shared.getCat(url: url) { result in
             switch result {
             case .success(let cat):
                 cell.setImage(catImage: cat)

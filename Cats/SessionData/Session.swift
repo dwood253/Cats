@@ -41,4 +41,8 @@ class Session {
             defaults.set(encoded, forKey: OPTIONS_KEY)
         }
     }
+    
+    func getUrl() -> String {
+        return NetworkingUrls.cat_Service_Base_Url
+    }
 }

@@ -8,138 +8,91 @@
 
 import UIKit
 
-fileprivate let CELL_ID = "cat_cell_id"
-
+fileprivate let RELOAD_BUTTON_DIMENSION: CGFloat = 40
 class MainVC: UIViewController {
-    lazy var catTable: UITableView = {
-        let table = UITableView(frame: CGRect.zero, style: .grouped)
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.backgroundColor = .secondarySystemBackground
-        return table
-    }()
-    let tableRefresh = UIRefreshControl()
-    var urlToUse: String? = nil
-    
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    lazy var catCollection: [UIImage] = []
 
+    lazy var backgroundImageView:UIImageView = {
+        let imgv = UIImageView()
+        imgv.translatesAutoresizingMaskIntoConstraints = false
+        imgv.contentMode = .scaleAspectFill
+        return imgv
+    }()
+    
+    lazy var displayImageView:UIImageView = {
+        let imgv = UIImageView()
+        imgv.translatesAutoresizingMaskIntoConstraints = false
+        imgv.contentMode = .scaleAspectFit
+        return imgv
+    }()
+    
+    lazy var reloadButton: UIButton = {
+        let btn = UIButton(type: .custom)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setImage(UIImage(systemName: "goforward"), for: .normal)
+        btn.addTarget(self, action: #selector(loadNewImage), for: .touchUpInside)
+        return btn
+    }()
+    
+    var isReloading: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupData()
-    }
-
-    fileprivate func setupUI() {
-        self.view.backgroundColor = .secondarySystemBackground
-        setupTable()
     }
     
-    //MARK: - Setup UI
-    
-    fileprivate func setupData() {
-        getRandomCat()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadNewImage()
     }
     
-    fileprivate func setupTable() {
-        self.view.addSubview(catTable)
-        catTable.fillSuperView(insets: UIEdgeInsets(top: self.view.safeAreaInsets.top, left: 0, bottom: self.view.safeAreaInsets.bottom, right: 0))
-        catTable.delegate = self
-        catTable.dataSource = self
-        catTable.register(catTableCell.self, forCellReuseIdentifier: CELL_ID)
-        //Add refresh option for pull down
-        tableRefresh.addTarget(self, action: #selector(refreshTable), for: .valueChanged)
-        tableRefresh.attributedTitle = NSAttributedString(string: "Fetch a cat. MEOW!")
-        catTable.addSubview(tableRefresh)
+    func setupUI() {
+        self.view.addSubviews([backgroundImageView, displayImageView, reloadButton])
+        backgroundImageView.fillSuperView()
+        NSLayoutConstraint.activate([
+            displayImageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            displayImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            displayImageView.heightAnchor.constraint(equalTo: self.view.heightAnchor),
+            displayImageView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
+            
+            reloadButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            reloadButton.heightAnchor.constraint(equalToConstant: RELOAD_BUTTON_DIMENSION),
+            reloadButton.widthAnchor.constraint(equalToConstant: RELOAD_BUTTON_DIMENSION),
+            reloadButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -15)
+        ])
     }
     
-    //MARK: - Helpers
-    
-    @objc func refreshTable() {
-        if let url = self.urlToUse {
-            getSpecificCat(url)
-        } else {
-            getRandomCat()
-        }
-    }
-    
-    func getRandomCat() {
-        NetworkingManager.shared.fetchRandomCat { result in
+    @objc func loadNewImage() {
+        let url = Session.data.getUrl()
+        NetworkingManager.shared.getCat(url: url) { [weak self] (result) in
+            guard let self = self else { return }
             switch result {
-            case .success(let catImage):
-                self.catCollection = [catImage]
-                self.catTable.reloadData()
+            case .success(let image):
+                UIView.transition(with: self.backgroundImageView, duration: 0.2, options: .transitionCrossDissolve, animations: {
+                    self.backgroundImageView.image = self.getImageWithBlur(image)
+                }, completion: nil)
+                self.dismissLoadingView()
+                UIView.transition(with: self.displayImageView, duration: 0.2, options: .transitionCrossDissolve, animations: {
+                     self.displayImageView.image = image
+                 }, completion: nil)
             case .failure(_):
+                //TODO: - handle this error
+                self.showToast("Oops! Something happened. Maybe a furball...")
                 break
-                //TODO: Handle this failure
             }
-            self.tableRefresh.endRefreshing()
         }
     }
-    
-    func getSpecificCat(_ url: String) {
-        NetworkingManager.shared.getSpecificCat(url: url) { result in
-            switch result {
-            case .success(let catImage):
-                self.catCollection = [catImage]
-                self.catTable.reloadData()
-            case .failure(_):
-                break
-                //TODO: Handle this failure
-            }
-            self.tableRefresh.endRefreshing()
-        }
-    }
-}
-
-//MARK: - UITableView Stuff
-extension MainVC: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return catCollection.count
+    var context = CIContext(options: nil)
+    func getImageWithBlur(_ image: UIImage) -> UIImage? {
+        guard let filter = CIFilter(name: "CIGaussianBlur"), let cropFilter = CIFilter(name: "CICrop"), let ogImage = CIImage(image: image) else { return nil }
+       
+        filter.setValue(ogImage, forKey: kCIInputImageKey)
+        filter.setValue(5, forKey: kCIInputRadiusKey)
+        
+        cropFilter.setValue(filter.outputImage, forKey: kCIInputImageKey)
+        cropFilter.setValue(CIVector(cgRect: ogImage.extent), forKey: "inputRectangle")
+        
+        guard let cropOutput = cropFilter.outputImage, let contextOutput = context.createCGImage(cropOutput, from: cropOutput.extent) else { return nil }
+        return UIImage(cgImage: contextOutput)
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CELL_ID, for: indexPath) as! catTableCell
-        cell.setupCell(image: catCollection[indexPath.row])
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-}
-
-//MARK: - UITableCell Stuff
-class catTableCell: UITableViewCell {
-    
-    lazy var cellImage: UIImageView = {
-       let imgView = UIImageView()
-        imgView.translatesAutoresizingMaskIntoConstraints = false
-        imgView.contentMode = .scaleAspectFit
-        return imgView
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier:reuseIdentifier)
-        setupCellUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setupCellUI() {
-        self.addSubview(cellImage)
-        cellImage.fillSuperView()
-    }
-    
-    func setupCell(image: UIImage) {
-        self.cellImage.image = image
-    }
 }
