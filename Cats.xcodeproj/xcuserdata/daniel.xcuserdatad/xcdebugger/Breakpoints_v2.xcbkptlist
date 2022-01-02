@@ -568,7 +568,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "2D1264A5-3EA7-4326-BCF6-195C899BC60D"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cats/SessionData/Session.swift"
@@ -577,6 +577,22 @@
             startingLineNumber = "92"
             endingLineNumber = "92"
             landmarkName = "getUrl()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "02A6BD36-7CE4-4F7D-9051-5BFBE425E000"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cats/MainView/MainTBC.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "getBarItem(title:itemVC:imageName:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
