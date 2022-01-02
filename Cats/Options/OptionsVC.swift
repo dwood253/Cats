@@ -43,6 +43,8 @@ class OptionsVC: UINavigationController {
         return option
     }()
     lazy var saysButton = UIButton()
+    lazy var sizeButton = UIButton()
+    lazy var colorButton = UIButton()
     
     lazy var typeOption: OptionContainerVC = {
         let option = OptionContainerVC(labelText: "Type", optionKey: .SizeType, delegate: self)
@@ -91,7 +93,7 @@ class OptionsVC: UINavigationController {
         super.viewDidAppear(animated)
     }
     
-    
+    //MARK: - Setup UI
     fileprivate func setupUI() {
         self.view.addSubview(optionCollectionView)
         optionCollectionView.fillSuperView()
@@ -101,7 +103,7 @@ class OptionsVC: UINavigationController {
         optionCollectionView.backgroundColor = .secondarySystemGroupedBackground
     }
     
-    //Options
+    //MARK: - Options
     fileprivate func setupOptions() {
         guard let options = Session.data.options else { return }
         //tag
@@ -110,7 +112,7 @@ class OptionsVC: UINavigationController {
         gifOption.checkBox.isChecked = (cachedOptions?.gif ?? false) ? true : false
         optionViews.append(gifOption.view)
         //says
-        optionViews.append(setupSaysOption(says: options.says))
+        optionViews.append(setupSaysOption(says: options.says, size: options.size, color: options.color))
         //size type
         optionViews.append(setupTypeOption(sizeType: options.type))
         //filter
@@ -128,8 +130,32 @@ class OptionsVC: UINavigationController {
     }
     
     
-    fileprivate func setupSaysOption(says: String?) -> UIView{
+    fileprivate func setupSaysOption(says: String?, size: String?, color: String?) -> UIView{
         setupOptionWithButton(option: saysOption, selected: says != nil, button: saysButton, buttonText: says ?? "Hello, World!", selector: #selector(showSaysInputView))
+        
+        let size = size ?? "30"
+        let color = color ?? "White"
+        sizeButton.setTitle("Size: \(size)", for: .normal)
+        colorButton.setTitle("Color: \(color)", for: .normal)
+        if let sizeButtonLabel = sizeButton.titleLabel, let colorButtonLabel = colorButton.titleLabel {
+            sizeButtonLabel.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+            colorButtonLabel.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+        }
+        sizeButton.setTitleColor(.link, for: .normal)
+        colorButton.setTitleColor(.link, for: .normal)
+        sizeButton.translatesAutoresizingMaskIntoConstraints = false
+        colorButton.translatesAutoresizingMaskIntoConstraints = false
+        saysOption.view.addSubviews([sizeButton, colorButton])
+        NSLayoutConstraint.activate([
+            colorButton.trailingAnchor.constraint(equalTo: saysOption.view.trailingAnchor, constant:  -Constants.option_padding_right),
+            colorButton.topAnchor.constraint(equalTo: saysOption.optionLabel.bottomAnchor, constant: 5),
+            sizeButton.centerYAnchor.constraint(equalTo: colorButton.centerYAnchor),
+            sizeButton.trailingAnchor.constraint(equalTo: colorButton.leadingAnchor, constant: -10),
+            saysOption.view.bottomAnchor.constraint(equalTo: colorButton.bottomAnchor, constant: 5)
+        ])
+        sizeButton.addTarget(self, action: #selector(showSizeInputView), for: .touchUpInside)
+        colorButton.addTarget(self, action: #selector(showColorSelectView), for: .touchUpInside)
+        
         return saysOption.view
     }
     
@@ -222,10 +248,23 @@ class OptionsVC: UINavigationController {
     }
     
     @objc func showSaysInputView() {
-        let inputView = OptionInputVC(inputTitles: ["Caption Text"], inputValues: [saysButton.titleLabel?.text ?? ""], type: .Says, delegate: self)
+        let inputView = OptionInputVC(inputTitles: ["Caption Text"], inputValues: [saysButton.titleLabel?.text ?? ""], type: .Says, delegate: self, optionalTag: 0)
         inputView.modalPresentationStyle = .overFullScreen
         self.present(inputView, animated: true, completion: nil)
     }
+    
+    @objc func showSizeInputView() {
+        let saysSize = Session.data.options.size ?? "30"
+        let inputView = OptionInputVC(inputTitles: ["Says Text Size"], inputValues: [saysSize], numbersOnly: true, type: .Says, delegate: self, optionalTag: 1)
+        inputView.modalPresentationStyle = .overFullScreen
+        self.present(inputView, animated: true, completion: nil)
+    }
+    
+    @objc func showColorSelectView() {
+         let selector = OptionSelectorVCViewController(optionType: .Says, options: Constants.colors, delegate: self)
+         selector.modalPresentationStyle = .overFullScreen
+         self.present(selector, animated: true, completion: nil)
+     }
     
     @objc func showTypeInputView() {
         let typeSelector = OptionSelectorVCViewController(optionType: .SizeType, options: Constants.types, delegate: self)
@@ -262,7 +301,8 @@ extension OptionsVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width:  CGFloat(min(self.view.frame.size.height, self.view.frame.size.width)), height: 30)
+        let rowHeight: CGFloat = indexPath.row == 2 ? 60 : 30
+        return CGSize(width:  CGFloat(min(self.view.frame.size.height, self.view.frame.size.width)), height: rowHeight)
     }
 }
 
@@ -319,13 +359,23 @@ extension OptionsVC: OptionValueChangedDelegate {
 
 //MARK: - OptionsInputDelegate - Called when Options that require user input changed
 extension OptionsVC: OptionsInputDelegate {
-    func finishedChangingOption(fieldValues: [String], option: OptionType) {
+    func finishedChangingOption(fieldValues: [String], option: OptionType, optionalTag: Int?) {
         guard let options = Session.data.options else { return }
         switch option {
         case .Says:
-            options.says = !fieldValues.isEmpty ? fieldValues[0] : nil
-            saysButton.setTitle(options.says ?? "Hello, World!", for: .normal)
-            saysOption.checkBox.isChecked = true
+            guard let optionalTag = optionalTag else { return }
+            switch optionalTag{
+            case 0:
+                options.says = !fieldValues.isEmpty ? fieldValues[0] : nil
+                saysButton.setTitle(options.says ?? "Hello, World!", for: .normal)
+                saysOption.checkBox.isChecked = true
+            case 1:
+                options.size = !fieldValues.isEmpty ? fieldValues[0] : nil
+                sizeButton.setTitle("Size: \(options.size ?? "30")", for: .normal)
+            default:
+                break
+            }
+
         case .Width:
             options.width = fieldValues.isEmpty ? nil : fieldValues[0]
             widthButton.setTitle(fieldValues.isEmpty ? "300" : fieldValues[0], for: .normal)

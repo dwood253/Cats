@@ -30,6 +30,9 @@ struct Constants {
     //Size/Type
     static let types = ["small", "medium", "square", "original"]
     
+    //Colors for "Says" option
+    static let colors = ["White", "Black", "Grey", "Yellow", "Red", "Blue", "Green", "Brown", "Pink", "Orange", "Purple"]
+    
     //Button
     static let button_height: CGFloat = 30
     static let button_corner_radius: CGFloat = 6

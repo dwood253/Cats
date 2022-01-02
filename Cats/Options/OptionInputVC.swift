@@ -9,7 +9,7 @@
 import UIKit
 
 protocol OptionsInputDelegate {
-    func finishedChangingOption(fieldValues:[String], option: OptionType)
+    func finishedChangingOption(fieldValues:[String], option: OptionType, optionalTag: Int?)
 }
 
 class OptionInputVC: UIViewController {
@@ -19,6 +19,7 @@ class OptionInputVC: UIViewController {
     var numbersOnly: Bool = false
     var optionType: OptionType!
     var delegate: OptionsInputDelegate?
+    var optionalTag: Int?
     
     lazy var valueStack: UIStackView = {
        let stack = UIStackView()
@@ -44,13 +45,14 @@ class OptionInputVC: UIViewController {
     }()
     
     //MARK: - Lifecycle
-    convenience init(inputTitles: [String], inputValues:[String], numbersOnly: Bool = false, type: OptionType, delegate: OptionsInputDelegate) {
+    convenience init(inputTitles: [String], inputValues:[String], numbersOnly: Bool = false, type: OptionType, delegate: OptionsInputDelegate, optionalTag: Int? = nil) {
         self.init()
         self.inputTitles = inputTitles
         self.inputValues = inputValues
         self.numbersOnly = numbersOnly
         self.optionType = type
         self.delegate = delegate
+        self.optionalTag = optionalTag
     }
     
     override func viewDidLoad() {
@@ -115,12 +117,9 @@ class OptionInputVC: UIViewController {
                 break
             }
         }
-        
-
-        
         if inputValid {
             guard let delegate = self.delegate else { return }
-            delegate.finishedChangingOption(fieldValues: inputValues, option: optionType)
+            delegate.finishedChangingOption(fieldValues: inputValues, option: optionType, optionalTag: optionalTag)
             self.dismiss(animated: true, completion: nil)
         } else {
             showToast("Uh Oh! Please make sure to fill out the options!")
