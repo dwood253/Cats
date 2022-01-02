@@ -44,8 +44,7 @@ class catTextField: UITextField, UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if self.numbersOnly {
             return CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: string))
-        } else {
-            return CharacterSet.alphanumerics.isSuperset(of: CharacterSet(charactersIn: string))
         }
+        return true
     }
 }

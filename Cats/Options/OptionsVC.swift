@@ -349,6 +349,9 @@ extension OptionsVC: OptionValueChangedDelegate {
             options.size = optionValue
             typeButton.setTitle(optionValue, for: .normal)
             typeOption.checkBox.isChecked = true
+        case .Says:
+            options.color = optionValue
+            colorButton.setTitle("Color: \(optionValue)", for: .normal)
         default:
             break
         }

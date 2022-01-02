@@ -43,8 +43,52 @@ class Session {
     }
     
     func getUrl() -> String {
+        var urlParameterAdded = false
         var url = NetworkingUrls.cat_Service_Base_Url
-//        if options.
-        return url
+        if let tag = options.tag {
+            url += "/\(tag)"
+        }
+        
+        //adding condition on bool for readability
+        if let gif = options.gif, gif == true {
+            url += "/gif"
+        }
+        
+        if let says = options.says {
+            url += "/says/\(says)"
+            if options.size != nil || options.color != nil {
+                url += "?"
+                if let size = options.size {
+                         url += "size=\(size)"
+                    urlParameterAdded = true
+                     }
+                   if let color = options.color {
+                    url += "\(urlParameterAdded ? "&" : "")color=\(color)"
+                    urlParameterAdded = true
+                   }
+            }
+        }
+        
+        if let type = options.type {
+          url += "\(urlParameterAdded ? "&" : "")type=\(type)"
+          urlParameterAdded = true
+         }
+        
+        if let filter = options.filter {
+          url += "\(urlParameterAdded ? "&" : "")filter=\(filter)"
+          urlParameterAdded = true
+         }
+        
+        if let width = options.width {
+          url += "\(urlParameterAdded ? "&" : "")width=\(width)"
+          urlParameterAdded = true
+         }
+        
+        if let height = options.height {
+          url += "\(urlParameterAdded ? "&" : "")height=\(height)"
+          urlParameterAdded = true
+         }
+        
+        return NSString(string: url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? NetworkingUrls.cat_Service_Base_Url
     }
 }
