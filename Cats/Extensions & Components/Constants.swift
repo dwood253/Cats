@@ -41,4 +41,6 @@ struct Constants {
     static let button_title_font_size: CGFloat = 14
     static let button_padding: CGFloat = 10
     
+    
+    static let FetchingKittingMessages = ["Show Me Yo Kitties!", "Activating Furball!", "Launching cat.exe!", "Purrfect Things!"]
 }

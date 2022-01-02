@@ -29,12 +29,15 @@ class MainVC: UIViewController {
         let btn = UIButton(type: .custom)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.setImage(UIImage(systemName: "goforward"), for: .normal)
-        btn.addTarget(self, action: #selector(loadNewImage), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(initiateCatSequence), for: .touchUpInside)
         return btn
     }()
     
     var isReloading: Bool = false
     
+    let imageDispatchGroup = DispatchGroup()
+    
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -42,9 +45,14 @@ class MainVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadNewImage()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        initiateCatSequence()
+    }
+    
+    //MARK: - SetupUI
     func setupUI() {
         self.view.addSubviews([backgroundImageView, displayImageView, reloadButton])
         backgroundImageView.fillSuperView()
@@ -61,10 +69,22 @@ class MainVC: UIViewController {
         ])
     }
     
-    @objc func loadNewImage() {
+    @objc func initiateCatSequence() {
+        let randomIndex = Int.random(in: 0..<Constants.FetchingKittingMessages.count)
+        let message = Constants.FetchingKittingMessages[randomIndex]
+        self.showLoadingView(message: message)
+        loadNewImage()
+        imageDispatchGroup.notify(queue: .main) {
+            self.dismissLoadingView()
+        }
+    }
+    
+    func loadNewImage() {
+        imageDispatchGroup.enter()
         let url = Session.data.getUrl()
         NetworkingManager.shared.getCat(url: url) { [weak self] (result) in
             guard let self = self else { return }
+            self.imageDispatchGroup.leave()
             switch result {
             case .success(let image):
                 UIView.transition(with: self.backgroundImageView, duration: 0.2, options: .transitionCrossDissolve, animations: {

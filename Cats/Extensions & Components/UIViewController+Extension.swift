@@ -12,8 +12,8 @@ import UIKit
 fileprivate let ALERT_TAG = -100
 extension UIViewController {
     
-    func showLoadingView() {
-        let alert = UIAlertController(title: nil, message: "Making things purrrfect...", preferredStyle: .alert)
+    func showLoadingView(message: String = "Making things purrrfect...") {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let indicator = UIActivityIndicatorView(frame: CGRect(x: -5, y: 5, width: 50, height: 50))
         indicator.startAnimating()
         alert.view.addSubview(indicator)
