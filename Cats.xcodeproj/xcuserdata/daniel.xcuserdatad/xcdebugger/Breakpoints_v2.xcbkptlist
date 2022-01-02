@@ -222,8 +222,8 @@
             filePath = "Cats/Options/OptionsVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "287"
-            endingLineNumber = "287"
+            startingLineNumber = "288"
+            endingLineNumber = "288"
             landmarkName = "finishedChangingOption(fieldValues:option:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -478,8 +478,8 @@
             filePath = "Cats/Options/OptionsVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "290"
-            endingLineNumber = "290"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
             landmarkName = "finishedChangingOption(fieldValues:option:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -497,6 +497,22 @@
             startingLineNumber = "284"
             endingLineNumber = "284"
             landmarkName = "finishedChangingOption(fieldValues:option:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2B666109-7FD6-4F32-A8CF-0D1E5EE697C5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cats/Options/OptionsVC.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "317"
+            endingLineNumber = "317"
+            landmarkName = "selectionChanged(key:selected:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

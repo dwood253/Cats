@@ -283,7 +283,8 @@ extension OptionsVC: OptionsInputDelegate {
         switch option {
         case .Says:
             options.says = !fieldValues.isEmpty ? fieldValues[0] : nil
-            saysButton.setTitle(options.says ?? "Hello, World!", for: .normal    )
+            saysButton.setTitle(options.says ?? "Hello, World!", for: .normal)
+            saysOption.checkBox.isChecked = true
         default:
             break
         }
@@ -320,6 +321,7 @@ extension OptionsVC: OptionSelectedDelegate {
         case .Gif:
             options.gif = selected
         case .Says:
+            options.says = selected ? saysButton.titleLabel?.text ?? "" : nil
             break
         case .Size:
             break
