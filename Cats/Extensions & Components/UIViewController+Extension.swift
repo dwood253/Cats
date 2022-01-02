@@ -27,10 +27,14 @@ extension UIViewController {
         }
     }
     
-    func showToast(_ message: String) {
+    func dismissLoadingViewNoAsync() {
+         self.dismiss(animated: true, completion: nil)
+     }
+    
+    func showToast(_ message: String, forDuration: TimeInterval = 1) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         present(alert, animated: true, completion: nil)
-        self.perform(#selector(dismissToast), with: nil, afterDelay: 1)
+        self.perform(#selector(dismissToast), with: nil, afterDelay: forDuration)
     }
     
     @objc func dismissToast() {

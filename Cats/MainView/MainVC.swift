@@ -9,6 +9,8 @@
 import UIKit
 
 fileprivate let RELOAD_BUTTON_DIMENSION: CGFloat = 40
+fileprivate let THROTTLE_MESSAGE_DISPLAY_TIME: TimeInterval = 4
+
 class MainVC: UIViewController {
 
     lazy var backgroundImageView:UIImageView = {
@@ -74,17 +76,13 @@ class MainVC: UIViewController {
         let message = Constants.FetchingKittingMessages[randomIndex]
         self.showLoadingView(message: message)
         loadNewImage()
-        imageDispatchGroup.notify(queue: .main) {
-            self.dismissLoadingView()
-        }
     }
     
     func loadNewImage() {
-        imageDispatchGroup.enter()
         let url = Session.data.getUrl()
         NetworkingManager.shared.getCat(url: url) { [weak self] (result) in
             guard let self = self else { return }
-            self.imageDispatchGroup.leave()
+            self.dismissLoadingViewNoAsync()
             switch result {
             case .success(let image):
                 UIView.transition(with: self.backgroundImageView, duration: 0.2, options: .transitionCrossDissolve, animations: {
@@ -94,10 +92,8 @@ class MainVC: UIViewController {
                 UIView.transition(with: self.displayImageView, duration: 0.2, options: .transitionCrossDissolve, animations: {
                      self.displayImageView.image = image
                  }, completion: nil)
-            case .failure(_):
-                //TODO: - handle this error
-                self.showToast("Oops! Something happened. Maybe a furball...")
-                break
+            case .failure(let error):
+                self.showToast(error.error, forDuration: THROTTLE_MESSAGE_DISPLAY_TIME)
             }
         }
     }
