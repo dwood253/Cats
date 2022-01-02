@@ -13,6 +13,7 @@ class OptionsModel: Codable {
     var says: String?
     var size: String?
     var color: String?
+    var type: String?
     var filter: String?
     var width: String?
     var height: String?

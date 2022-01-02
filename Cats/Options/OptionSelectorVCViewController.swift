@@ -29,10 +29,7 @@ class OptionSelectorVCViewController: UIViewController {
     }()
     
     lazy var cancelButton: UIButton = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.layer.cornerRadius = Constants.button_corner_radius
-        btn.backgroundColor = .cyan
+        let btn = catButton()
         btn.setTitle("Dismiss", for: .normal)
         btn.addTarget(self, action: #selector(dismissSelf), for: .touchUpInside)
         return btn

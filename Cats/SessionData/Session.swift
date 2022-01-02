@@ -43,6 +43,8 @@ class Session {
     }
     
     func getUrl() -> String {
-        return NetworkingUrls.cat_Service_Base_Url
+        var url = NetworkingUrls.cat_Service_Base_Url
+//        if options.
+        return url
     }
 }
