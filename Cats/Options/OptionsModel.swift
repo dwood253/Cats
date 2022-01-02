@@ -14,7 +14,6 @@ class OptionsModel: Codable {
     var size: String?
     var color: String?
     var filter: String?
-    var width_height: Bool?
-    var width: String = "300"
-    var height: String = "300"
+    var width: String?
+    var height: String?
 }

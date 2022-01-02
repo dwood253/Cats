@@ -68,12 +68,19 @@ class OptionsVC: UINavigationController {
         return btn
     }()
     
-    lazy var widthHeightOption: OptionContainerVC = {
-        let option = OptionContainerVC(labelText: "Width/Height", optionKey: .Width_Height, delegate: self)
+    lazy var widthOption: OptionContainerVC = {
+        let option = OptionContainerVC(labelText: "Width", optionKey: .Width, delegate: self)
         return option
     }()
     
-    lazy var widthHeightButton = UIButton()
+    lazy var widthButton = UIButton()
+    
+    lazy var heightOption: OptionContainerVC = {
+        let option = OptionContainerVC(labelText: "Height", optionKey: .Height, delegate: self)
+        return option
+    }()
+    
+    lazy var heightButton = UIButton()
     
     
     var dataGroup = DispatchGroup()
@@ -114,8 +121,10 @@ class OptionsVC: UINavigationController {
         optionViews.append(setupSizeOption(size: options.size))
         //filter
         optionViews.append(setupFilterOption(filter: options.filter))
-        //width/height
-        optionViews.append(setupWidthHeightOption(selected: options.width_height ?? false, buttonText: "\(options.width)x\(options.height)"))
+        //width
+        optionViews.append(setupWidthOption(selected: options.width != nil, buttonText: options.width ?? "300" ))
+        //width
+        optionViews.append(setupHeightOption(selected: options.height != nil, buttonText: options.height ?? "300"))
 
     }
     
@@ -172,9 +181,14 @@ class OptionsVC: UINavigationController {
         return filterOption.view
     }
     
-    fileprivate func setupWidthHeightOption(selected: Bool, buttonText: String) -> UIView{
-        setupOptionWithButton(option: widthHeightOption, selected: selected, button: widthHeightButton, buttonText: buttonText, selector: #selector(showWidthHeightInputView))
-        return widthHeightOption.view
+    fileprivate func setupWidthOption(selected: Bool, buttonText: String) -> UIView{
+        setupOptionWithButton(option: widthOption, selected: selected, button: widthButton, buttonText: buttonText, selector: #selector(showWidthInputView))
+        return widthOption.view
+    }
+    
+    fileprivate func setupHeightOption(selected: Bool, buttonText: String) -> UIView{
+        setupOptionWithButton(option: heightOption, selected: selected, button: heightButton, buttonText: buttonText, selector: #selector(showHeightInputView))
+        return heightOption.view
     }
     
     fileprivate func setupOptionWithButton(option: OptionContainerVC, selected: Bool, button: UIButton, buttonText: String, selector: Selector) {
@@ -257,9 +271,16 @@ class OptionsVC: UINavigationController {
         self.present(sizeSelector, animated: true, completion: nil)
     }
     
-    @objc func showWidthHeightInputView() {
+    @objc func showWidthInputView() {
         guard let options = Session.data.options else { return }
-        let inputView = OptionInputVC(inputTitles: ["Width", "Height"], inputValues: [options.width, options.height], numbersOnly: true, type: .Width_Height, delegate: self)
+        let inputView = OptionInputVC(inputTitles: ["Width"], inputValues: [options.width ?? "300"], numbersOnly: true, type: .Width, delegate: self)
+        inputView.modalPresentationStyle = .overFullScreen
+        self.present(inputView, animated: true, completion: nil)
+    }
+    
+    @objc func showHeightInputView() {
+        guard let options = Session.data.options else { return }
+        let inputView = OptionInputVC(inputTitles: ["Height"], inputValues: [options.height ?? "300"], numbersOnly: true, type: .Height, delegate: self)
         inputView.modalPresentationStyle = .overFullScreen
         self.present(inputView, animated: true, completion: nil)
     }
@@ -299,8 +320,10 @@ extension OptionsVC: OptionSelectedDelegate {
             options.size = selected ? sizeButton.titleLabel?.text ?? "" : nil
         case .Filter:
             options.filter = selected ? filterButton.titleLabel?.text ?? "" : nil
-        case .Width_Height:
-            options.width_height = selected
+        case .Width:
+            options.width = selected ? widthButton.titleLabel?.text ?? "" : nil
+        case .Height:
+            options.height = selected ? heightButton.titleLabel?.text ?? "" : nil
         }
         Session.data.storeOptions()
     }
@@ -341,14 +364,14 @@ extension OptionsVC: OptionsInputDelegate {
             options.says = !fieldValues.isEmpty ? fieldValues[0] : nil
             saysButton.setTitle(options.says ?? "Hello, World!", for: .normal)
             saysOption.checkBox.isChecked = true
-        case .Width_Height:
-            options.width_height = !fieldValues.isEmpty
-            if !fieldValues.isEmpty, fieldValues.count == 2 {
-                options.width = fieldValues[0]
-                options.height = fieldValues[1]
-            }
-            widthHeightButton.setTitle("\(options.width)x\(options.height)", for: .normal)
-            widthHeightOption.checkBox.isChecked = true
+        case .Width:
+            options.width = fieldValues.isEmpty ? nil : fieldValues[0]
+            widthButton.setTitle(fieldValues.isEmpty ? "300" : fieldValues[0], for: .normal)
+            widthOption.checkBox.isChecked = true
+        case .Height:
+            options.height = fieldValues.isEmpty ? nil : fieldValues[0]
+            heightButton.setTitle(fieldValues.isEmpty ? "300" : fieldValues[0], for: .normal)
+            heightOption.checkBox.isChecked = true
         default:
             break
         }
@@ -383,7 +406,8 @@ enum OptionType {
     case Says
     case Size
     case Filter
-    case Width_Height
+    case Width
+    case Height
 }
 
 
