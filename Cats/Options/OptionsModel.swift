@@ -11,9 +11,10 @@ class OptionsModel: Codable {
     var tag: String?
     var gif: Bool?
     var says: String?
-    var size: Int?
+    var size: String?
     var color: String?
     var filter: String?
-    var width: Int?
-    var height: Int?
+    var width_height: Bool?
+    var width: String = "300"
+    var height: String = "300"
 }

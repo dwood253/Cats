@@ -63,7 +63,6 @@ class OptionInputVC: UIViewController {
         self.view.backgroundColor = UIColor.secondarySystemGroupedBackground.withAlphaComponent(0.8)
         self.view.addSubviews([valueStack, doneButton, cancelButton])
         NSLayoutConstraint.activate([
-//            valueStack.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
             valueStack.topAnchor.constraint(equalTo: self.view.topAnchor),
             valueStack.bottomAnchor.constraint(lessThanOrEqualTo: cancelButton.topAnchor),
             valueStack.widthAnchor.constraint(lessThanOrEqualTo: self.view.widthAnchor),
@@ -116,6 +115,8 @@ class OptionInputVC: UIViewController {
                 break
             }
         }
+        
+
         
         if inputValid {
             guard let delegate = self.delegate else { return }

@@ -45,9 +45,11 @@ class OptionsVC: UINavigationController {
     lazy var saysButton = UIButton()
     
     lazy var sizeOption: OptionContainerVC = {
-        let option = OptionContainerVC(labelText: "Size", optionKey: .Says, delegate: self)
+        let option = OptionContainerVC(labelText: "Size", optionKey: .Size, delegate: self)
         return option
     }()
+    
+    lazy var sizeButton = UIButton()
     
     lazy var sizeTextField: UITextField = {
         let tf = UITextField()
@@ -56,7 +58,7 @@ class OptionsVC: UINavigationController {
     }()
     
     lazy var filterOption: OptionContainerVC = {
-        let option = OptionContainerVC(labelText: "Filter", optionKey: .Says, delegate: self)
+        let option = OptionContainerVC(labelText: "Filter", optionKey: .Filter, delegate: self)
         return option
     }()
     
@@ -67,21 +69,11 @@ class OptionsVC: UINavigationController {
     }()
     
     lazy var widthHeightOption: OptionContainerVC = {
-        let option = OptionContainerVC(labelText: "Width/Height", optionKey: .Says, delegate: self)
+        let option = OptionContainerVC(labelText: "Width/Height", optionKey: .Width_Height, delegate: self)
         return option
     }()
     
-    lazy var widthTextField: UITextField = {
-       let tf = UITextField()
-       tf.translatesAutoresizingMaskIntoConstraints = false
-       return tf
-    }()
-    
-    lazy var heightTextField: UITextField = {
-       let tf = UITextField()
-       tf.translatesAutoresizingMaskIntoConstraints = false
-       return tf
-    }()
+    lazy var widthHeightButton = UIButton()
     
     
     var dataGroup = DispatchGroup()
@@ -119,11 +111,11 @@ class OptionsVC: UINavigationController {
         //says
         optionViews.append(setupSaysOption(says: options.says))
         //size
-        optionViews.append(setupSizeOption())
+        optionViews.append(setupSizeOption(size: options.size))
         //filter
         optionViews.append(setupFilterOption(filter: options.filter))
         //width/height
-        optionViews.append(setupWidthHeightOption())
+        optionViews.append(setupWidthHeightOption(selected: options.width_height ?? false, buttonText: "\(options.width)x\(options.height)"))
 
     }
     
@@ -148,55 +140,58 @@ class OptionsVC: UINavigationController {
     
     
     fileprivate func setupSaysOption(says: String?) -> UIView{
-        saysButton.translatesAutoresizingMaskIntoConstraints = false
-        saysButton.addTarget(self, action: #selector(showSaysInputView), for: .touchUpInside)
-        saysButton.setTitleColor(.link, for: .normal)
-        saysButton.titleLabel?.font = .systemFont(ofSize: 14)
-        saysOption.view.addSubview(saysButton)
-        NSLayoutConstraint.activate([
-            saysButton.leadingAnchor.constraint(equalTo: saysOption.optionLabel.trailingAnchor),
-            saysButton.centerYAnchor.constraint(equalTo: saysOption.optionLabel.centerYAnchor),
-            saysButton.trailingAnchor.constraint(equalTo: saysOption.view.trailingAnchor, constant: -Constants.option_padding_right),
-            saysButton.heightAnchor.constraint(equalToConstant: Constants.label_height)
-        ])
-        if let saysStr = says, !saysStr.isEmpty {
-            saysOption.checkBox.isChecked = true
-            saysButton.setTitle(saysStr, for: .normal)
-        } else {
-            saysButton.setTitle("Hello, World!", for: .normal)
+        var saysSelected: Bool = false
+        var saysButtonText = "Hello, World!"
+        if let saysSanitized = says?.trimmingCharacters(in: .whitespaces), !saysSanitized.isEmpty {
+            saysButtonText = saysSanitized
+            saysSelected = true
         }
+        setupOptionWithButton(option: saysOption, selected: saysSelected, button: saysButton, buttonText: saysButtonText, selector: #selector(showSaysInputView))
         return saysOption.view
     }
     
-    fileprivate func setupSizeOption() -> UIView{
-        
+    fileprivate func setupSizeOption(size: String?) -> UIView{
+        var sizeSelected: Bool = false
+        var sizeButtonText = "300"
+        if let sizeSanitized = size?.trimmingCharacters(in: .whitespaces), !sizeSanitized.isEmpty {
+            sizeButtonText = sizeSanitized
+            sizeSelected = true
+        }
+        setupOptionWithButton(option: sizeOption, selected: sizeSelected, button: sizeButton, buttonText: sizeButtonText, selector: #selector(showSizeInputView))
         return sizeOption.view
     }
     
     fileprivate func setupFilterOption(filter: String?) -> UIView{
-        filterButton.translatesAutoresizingMaskIntoConstraints = false
-        filterButton.addTarget(self, action: #selector(showFilterSelectorView), for: .touchUpInside)
-        filterButton.setTitleColor(.link, for: .normal)
-        filterButton.titleLabel?.font = .systemFont(ofSize: 14)
-        filterOption.view.addSubview(filterButton)
-        NSLayoutConstraint.activate([
-            filterButton.leadingAnchor.constraint(equalTo: filterOption.optionLabel.trailingAnchor),
-            filterButton.centerYAnchor.constraint(equalTo: filterOption.optionLabel.centerYAnchor),
-            filterButton.trailingAnchor.constraint(equalTo: filterOption.view.trailingAnchor, constant: -Constants.option_padding_right),
-            filterButton.heightAnchor.constraint(equalToConstant: Constants.label_height)
-        ])
-        if let filter = filter, !filter.isEmpty {
-            filterOption.checkBox.isChecked = true
-            filterButton.setTitle(filter, for: .normal)
-        } else {
-            filterButton.setTitle(Constants.filters[0], for: .normal)
+        var filterSelected: Bool = false
+        var filterButtonText = Constants.filters[0]
+        if let filterSanitized = filter?.trimmingCharacters(in: .whitespaces), !filterSanitized.isEmpty {
+            filterButtonText = filterSanitized
+            filterSelected = true
         }
+        setupOptionWithButton(option: filterOption, selected: filterSelected, button: filterButton, buttonText: filterButtonText, selector: #selector(showFilterSelectorView))
         return filterOption.view
     }
     
-    fileprivate func setupWidthHeightOption() -> UIView{
-        
+    fileprivate func setupWidthHeightOption(selected: Bool, buttonText: String) -> UIView{
+        setupOptionWithButton(option: widthHeightOption, selected: selected, button: widthHeightButton, buttonText: buttonText, selector: #selector(showWidthHeightInputView))
         return widthHeightOption.view
+    }
+    
+    fileprivate func setupOptionWithButton(option: OptionContainerVC, selected: Bool, button: UIButton, buttonText: String, selector: Selector) {
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: selector, for: .touchUpInside)
+        button.setTitleColor(.link, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14)
+        button.setTitle(buttonText, for: .normal)
+        option.view.addSubview(button)
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: option.optionLabel.trailingAnchor),
+            button.centerYAnchor.constraint(equalTo: option.optionLabel.centerYAnchor),
+            button.trailingAnchor.constraint(equalTo: option.view.trailingAnchor, constant: -Constants.option_padding_right),
+            button.heightAnchor.constraint(equalToConstant: Constants.label_height)
+        ])
+        option.checkBox.isChecked = selected
     }
     
     //MARK: - Data
@@ -255,6 +250,19 @@ class OptionsVC: UINavigationController {
         inputView.modalPresentationStyle = .overFullScreen
         self.present(inputView, animated: true, completion: nil)
     }
+    
+    @objc func showSizeInputView() {
+        let sizeSelector = OptionSelectorVCViewController(optionType: .Tag, options: Constants.types, delegate: self)
+        sizeSelector.modalPresentationStyle = .overFullScreen
+        self.present(sizeSelector, animated: true, completion: nil)
+    }
+    
+    @objc func showWidthHeightInputView() {
+        guard let options = Session.data.options else { return }
+        let inputView = OptionInputVC(inputTitles: ["Width", "Height"], inputValues: [options.width, options.height], numbersOnly: true, type: .Width_Height, delegate: self)
+        inputView.modalPresentationStyle = .overFullScreen
+        self.present(inputView, animated: true, completion: nil)
+    }
 }
 
 
@@ -275,8 +283,56 @@ extension OptionsVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     }
 }
 
-//MARK: - OptionsInputDelegate
 
+//MARK: - OptionSelectedDelegate - Called when checkbox value changes
+extension OptionsVC: OptionSelectedDelegate {
+    func selectionChanged(key: OptionType, selected: Bool) {
+        guard let options = Session.data.options else { return }
+        switch key {
+        case .Tag:
+            options.tag = selected ? tagButton.titleLabel?.text ?? "" : nil
+        case .Gif:
+            options.gif = selected
+        case .Says:
+            options.says = selected ? saysButton.titleLabel?.text ?? "" : nil
+        case .Size:
+            options.size = selected ? sizeButton.titleLabel?.text ?? "" : nil
+        case .Filter:
+            options.filter = selected ? filterButton.titleLabel?.text ?? "" : nil
+        case .Width_Height:
+            options.width_height = selected
+        }
+        Session.data.storeOptions()
+    }
+}
+
+//MARK: - OptionValueChangedDelegate - Called when Tag or Filter tableview option selected
+extension OptionsVC: OptionValueChangedDelegate {
+    func optionValueChanged(optionValue: String, optionType: OptionType) {
+        guard let options = Session.data.options else { return }
+        
+        switch optionType {
+        case .Tag:
+            options.tag = optionValue
+            tagButton.setTitle(optionValue, for: .normal)
+            tagOption.checkBox.isChecked = true
+        case .Filter:
+            options.filter = optionValue
+            filterButton.setTitle(optionValue, for: .normal)
+            filterOption.checkBox.isChecked = true
+        case .Size:
+            options.size = optionValue
+            sizeButton.setTitle(optionValue, for: .normal)
+            sizeOption.checkBox.isChecked = true
+        default:
+            break
+        }
+        
+        Session.data.storeOptions()
+    }
+}
+
+//MARK: - OptionsInputDelegate - Called when Options that require user input changed
 extension OptionsVC: OptionsInputDelegate {
     func finishedChangingOption(fieldValues: [String], option: OptionType) {
         guard let options = Session.data.options else { return }
@@ -285,12 +341,21 @@ extension OptionsVC: OptionsInputDelegate {
             options.says = !fieldValues.isEmpty ? fieldValues[0] : nil
             saysButton.setTitle(options.says ?? "Hello, World!", for: .normal)
             saysOption.checkBox.isChecked = true
+        case .Width_Height:
+            options.width_height = !fieldValues.isEmpty
+            if !fieldValues.isEmpty, fieldValues.count == 2 {
+                options.width = fieldValues[0]
+                options.height = fieldValues[1]
+            }
+            widthHeightButton.setTitle("\(options.width)x\(options.height)", for: .normal)
+            widthHeightOption.checkBox.isChecked = true
         default:
             break
         }
         Session.data.storeOptions()
     }
 }
+
 
 //MARK: - UICollectionViewCell
 class OptionCollectionViewCell: UICollectionViewCell {
@@ -311,51 +376,6 @@ class OptionCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-extension OptionsVC: OptionSelectedDelegate {
-    func selectionChanged(key: OptionType, selected: Bool) {
-        guard let options = Session.data.options else { return }
-        switch key {
-        case .Tag:
-            options.tag = selected ? tagButton.titleLabel?.text ?? "" : nil
-        case .Gif:
-            options.gif = selected
-        case .Says:
-            options.says = selected ? saysButton.titleLabel?.text ?? "" : nil
-            break
-        case .Size:
-            break
-        case .Filter:
-            options.filter = selected ? filterButton.titleLabel?.text ?? "" : nil
-            break
-        case .Width_Height:
-            break
-        }
-        Session.data.storeOptions()
-    }
-}
-
-extension OptionsVC: OptionValueChangedDelegate {
-    func optionValueChanged(optionValue: String, optionType: OptionType) {
-        guard let options = Session.data.options else { return }
-        
-        switch optionType {
-        case .Tag:
-            options.tag = optionValue
-            tagButton.setTitle(optionValue, for: .normal)
-            tagOption.checkBox.isChecked = true
-        case .Filter:
-            options.filter = optionValue
-            filterButton.setTitle(optionValue, for: .normal)
-            filterOption.checkBox.isChecked = true
-        default:
-            break
-        }
-        
-        Session.data.storeOptions()
-    }
-}
-
 
 enum OptionType {
     case Tag

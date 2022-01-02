@@ -8,7 +8,7 @@
 
 import UIKit
 
-class catTextField: UITextField {
+class catTextField: UITextField, UITextFieldDelegate {
     var numbersOnly: Bool = false
     
     init(initialValue: String? = "", numbersOnly: Bool = false, alignment: NSTextAlignment = .left) {
@@ -18,18 +18,16 @@ class catTextField: UITextField {
         self.numbersOnly = numbersOnly
         self.translatesAutoresizingMaskIntoConstraints = false
         self.textAlignment = alignment
+        self.delegate = self
+        if self.numbersOnly {
+            self.keyboardType = .numberPad
+        }
         
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func shouldChangeText(in range: UITextRange, replacementText text: String) -> Bool {
-        print(text)
-        return super.shouldChangeText(in: range, replacementText: text)
-    }
-    
     
     func addDoneButton() {
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 30))
@@ -41,5 +39,13 @@ class catTextField: UITextField {
     
     @objc func doneEditing() {
         self.resignFirstResponder()
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if self.numbersOnly {
+            return CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: string))
+        } else {
+            return CharacterSet.alphanumerics.isSuperset(of: CharacterSet(charactersIn: string))
+        }
     }
 }
