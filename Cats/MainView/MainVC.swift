@@ -27,6 +27,13 @@ class MainVC: UIViewController {
         return imgv
     }()
     
+    lazy var displayGif: UIImageView = {
+        let imgv = UIImageView()
+      imgv.translatesAutoresizingMaskIntoConstraints = false
+      imgv.contentMode = .scaleAspectFit
+      return imgv
+    }()
+    
     lazy var reloadButton: UIButton = {
         let btn = UIButton(type: .custom)
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -56,13 +63,18 @@ class MainVC: UIViewController {
     
     //MARK: - SetupUI
     func setupUI() {
-        self.view.addSubviews([backgroundImageView, displayImageView, reloadButton])
+        self.view.addSubviews([backgroundImageView, displayImageView, displayGif, reloadButton])
         backgroundImageView.fillSuperView()
         NSLayoutConstraint.activate([
             displayImageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
             displayImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             displayImageView.heightAnchor.constraint(equalTo: self.view.heightAnchor),
             displayImageView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
+            
+            displayGif.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            displayGif.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            displayGif.heightAnchor.constraint(equalTo: self.view.heightAnchor),
+            displayGif.widthAnchor.constraint(equalTo: self.view.widthAnchor),
             
             reloadButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
             reloadButton.heightAnchor.constraint(equalToConstant: RELOAD_BUTTON_DIMENSION),
@@ -89,14 +101,27 @@ class MainVC: UIViewController {
                     self.backgroundImageView.image = self.getImageWithBlur(image)
                 }, completion: nil)
                 UIView.transition(with: self.displayImageView, duration: 0.2, options: .transitionCrossDissolve, animations: {
-                     self.displayImageView.image = image
-                 }, completion: nil)
+                    self.displayImageView.image = UIImage.animatedImage(with: [image], duration: 0.3)
+                }, completion: nil)
+                if url.contains("gif") {
+                    self.displayImageView.isHidden = true
+                    self.view.addSubview(self.displayGif)
+                    self.displayGif.asGif(gifData: NetworkingManager.shared.previouslyFetchedData! as CFData)
+                    self.displayGif.startAnimating()
+                    self.displayGif.isHidden = false
+                } else {
+                    self.displayGif.stopAnimating()
+                    self.displayGif.isHidden = true
+                    self.displayImageView.isHidden = false
+                }
+                self.view.bringSubviewToFront(self.reloadButton)
             case .failure(let error):
                 self.dismissLoadingViewWithCompletion {
                     self.showToast(error.error, forDuration: THROTTLE_MESSAGE_DISPLAY_TIME)
                 }
             }
         }
+       
     }
     var context = CIContext(options: nil)
     func getImageWithBlur(_ image: UIImage) -> UIImage? {
@@ -113,3 +138,4 @@ class MainVC: UIViewController {
     }
     
 }
+

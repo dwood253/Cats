@@ -32,7 +32,6 @@ class NetworkingManager {
     }
     
     func giveMeACatRetry(url: String, numberOfAttempts: Int,  completion: @escaping(Result<UIImage, nmError>) -> Void) {
-        print("numberofattempts: \(numberOfAttempts)")
         if numberOfAttempts < RETRY_COUNT {
             AF.request(url).response { response in
                 guard let status = response.response?.statusCode else { completion(.failure(nmError("unrecognized response from CATAAS API"))); return }

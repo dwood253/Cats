@@ -26,6 +26,7 @@
 		65B906A227742E5100F8AB1F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B906A127742E5100F8AB1F /* NetworkManager.swift */; };
 		65B906A427742E7400F8AB1F /* NetworkUrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B906A327742E7400F8AB1F /* NetworkUrls.swift */; };
 		65C7FEA42780452400927E6E /* catTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C7FEA32780452400927E6E /* catTextField.swift */; };
+		65C7FEA827829A7A00927E6E /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C7FEA727829A7A00927E6E /* UIImageView+Extension.swift */; };
 		65E8E43E277C399200C3B823 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E43D277C399200C3B823 /* Constants.swift */; };
 		65E8E441277D76B400C3B823 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E440277D76B400C3B823 /* UIViewController+Extension.swift */; };
 		65E8E443277D809200C3B823 /* OptionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E8E442277D809200C3B823 /* OptionsModel.swift */; };
@@ -68,6 +69,7 @@
 		65B906A127742E5100F8AB1F /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		65B906A327742E7400F8AB1F /* NetworkUrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUrls.swift; sourceTree = "<group>"; };
 		65C7FEA32780452400927E6E /* catTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = catTextField.swift; sourceTree = "<group>"; };
+		65C7FEA727829A7A00927E6E /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		65E8E43D277C399200C3B823 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		65E8E440277D76B400C3B823 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		65E8E442277D809200C3B823 /* OptionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsModel.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				65E8E447277EBFE000C3B823 /* UITextField+Extension.swift */,
 				65268CC1278036D50050AB42 /* catButton.swift */,
 				65C7FEA32780452400927E6E /* catTextField.swift */,
+				65C7FEA727829A7A00927E6E /* UIImageView+Extension.swift */,
 			);
 			path = "Extensions & Components";
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				656F2945277C21FE00D359B8 /* MainTBC.swift in Sources */,
 				65520D0A277C1BA00029C704 /* catLabel.swift in Sources */,
 				65B9053A2773EF5000F8AB1F /* AppDelegate.swift in Sources */,
+				65C7FEA827829A7A00927E6E /* UIImageView+Extension.swift in Sources */,
 				65B906A427742E7400F8AB1F /* NetworkUrls.swift in Sources */,
 				656F294B277C309D00D359B8 /* CheckBox.swift in Sources */,
 				65B9053C2773EF5000F8AB1F /* SceneDelegate.swift in Sources */,

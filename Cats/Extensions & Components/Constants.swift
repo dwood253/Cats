@@ -42,5 +42,5 @@ struct Constants {
     static let button_padding: CGFloat = 10
     
     
-    static let FetchingKittingMessages = ["Show Me Yo Kitties!", "Activating Furball!", "Launching cat.exe!", "Purrfect Things!"]
+    static let FetchingKittingMessages = ["Show Me Yo Kitties!", "Activating Furball!", "Launching cat.exe!", "Purrfecting Things!"]
 }
