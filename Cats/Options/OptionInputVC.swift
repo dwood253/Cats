@@ -65,8 +65,9 @@ class OptionInputVC: UIViewController {
         self.view.backgroundColor = UIColor.secondarySystemGroupedBackground.withAlphaComponent(0.8)
         self.view.addSubviews([valueStack, doneButton, cancelButton])
         NSLayoutConstraint.activate([
-            valueStack.topAnchor.constraint(equalTo: self.view.topAnchor),
+            valueStack.topAnchor.constraint(greaterThanOrEqualTo: self.view.safeAreaLayoutGuide.topAnchor),
             valueStack.bottomAnchor.constraint(lessThanOrEqualTo: cancelButton.topAnchor),
+            valueStack.centerYAnchor.constraint(lessThanOrEqualTo: self.view.centerYAnchor),
             valueStack.widthAnchor.constraint(lessThanOrEqualTo: self.view.widthAnchor),
             valueStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
 
