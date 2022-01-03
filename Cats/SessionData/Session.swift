@@ -69,6 +69,10 @@ class Session {
             }
         }
         
+        if !urlParameterAdded {
+            url += "?"
+        }
+        
         if let type = options.type {
           url += "\(urlParameterAdded ? "&" : "")type=\(type)"
           urlParameterAdded = true
@@ -88,7 +92,8 @@ class Session {
           url += "\(urlParameterAdded ? "&" : "")height=\(height)"
           urlParameterAdded = true
          }
-        
-        return NSString(string: url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? NetworkingUrls.cat_Service_Base_Url
+        let urlToUse = NSString(string: url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? NetworkingUrls.cat_Service_Base_Url
+        print(urlToUse)
+        return urlToUse
     }
 }

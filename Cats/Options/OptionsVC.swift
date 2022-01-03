@@ -346,7 +346,7 @@ extension OptionsVC: OptionValueChangedDelegate {
             filterButton.setTitle(optionValue, for: .normal)
             filterOption.checkBox.isChecked = true
         case .SizeType:
-            options.size = optionValue
+            options.type = optionValue
             typeButton.setTitle(optionValue, for: .normal)
             typeOption.checkBox.isChecked = true
         case .Says:

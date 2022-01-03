@@ -27,6 +27,14 @@ extension UIViewController {
         }
     }
     
+    func dismissLoadingViewWithCompletion(completion: @escaping() -> Void){
+        DispatchQueue.main.async {
+            self.dismiss(animated: true, completion: {
+                completion()
+            })
+        }
+    }
+    
     func dismissLoadingViewNoAsync() {
          self.dismiss(animated: true, completion: nil)
      }

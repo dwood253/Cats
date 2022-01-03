@@ -552,7 +552,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "F3A3C900-6426-4D91-95A7-A076D1440490"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cats/Options/OptionsVC.swift"
@@ -574,8 +574,8 @@
             filePath = "Cats/SessionData/Session.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
+            startingLineNumber = "97"
+            endingLineNumber = "97"
             landmarkName = "getUrl()"
             landmarkType = "7">
          </BreakpointContent>
@@ -606,8 +606,8 @@
             filePath = "Cats/Networking/NetworkManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
             landmarkName = "giveMeACatRetry(url:numberOfAttempts:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -615,47 +615,79 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "5C94D687-E385-4607-8C50-A23C775300B3"
+            uuid = "06B8A708-AFF6-4288-8950-DA2CBB89FA46"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Cats/Networking/NetworkManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
             landmarkName = "giveMeACatRetry(url:numberOfAttempts:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D1957311-8FCF-4A24-957A-EDEFF3A78BC4"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cats/MainView/MainVC.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
+            landmarkName = "loadNewImage()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A9E76C6A-BD24-43A2-8F82-94536C3A6822"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cats/MainView/MainVC.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
+            landmarkName = "loadNewImage()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "5C94D687-E385-4607-8C50-A23C775300B3 - 5027e46406a0b23f"
+                  uuid = "A9E76C6A-BD24-43A2-8F82-94536C3A6822 - d4798c7324a656cc"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Alamofire.DataResponse&lt;Swift.Optional&lt;Foundation.Data&gt;, Alamofire.AFError&gt;) -&gt; () in Cats.NetworkingManager.giveMeACatRetry(url: Swift.String, numberOfAttempts: Swift.Int, completion: (Swift.Optional&lt;__C.UIImage&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Result&lt;__C.UIImage, Cats.nmError&gt;) -&gt; () in Cats.MainVC.loadNewImage() -&gt; ()"
                   moduleName = "Cats"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/daniel/Developer/Cats/Cats/Networking/NetworkManager.swift"
+                  urlString = "file:///Users/daniel/Developer/Cats/Cats/MainView/MainVC.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "43"
-                  endingLineNumber = "43"
-                  offsetFromSymbolStart = "901">
+                  startingLineNumber = "88"
+                  endingLineNumber = "88"
+                  offsetFromSymbolStart = "430">
                </Location>
                <Location
-                  uuid = "5C94D687-E385-4607-8C50-A23C775300B3 - e536d7581c636023"
+                  uuid = "A9E76C6A-BD24-43A2-8F82-94536C3A6822 - 714087a905247e06"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.UIImage&gt;) -&gt; () in closure #1 (Alamofire.DataResponse&lt;Swift.Optional&lt;Foundation.Data&gt;, Alamofire.AFError&gt;) -&gt; () in Cats.NetworkingManager.giveMeACatRetry(url: Swift.String, numberOfAttempts: Swift.Int, completion: (Swift.Optional&lt;__C.UIImage&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #1 () -&gt; () in closure #1 (Swift.Result&lt;__C.UIImage, Cats.nmError&gt;) -&gt; () in Cats.MainVC.loadNewImage() -&gt; ()"
                   moduleName = "Cats"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/daniel/Developer/Cats/Cats/Networking/NetworkManager.swift"
+                  urlString = "file:///Users/daniel/Developer/Cats/Cats/MainView/MainVC.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "44"
-                  endingLineNumber = "44"
-                  offsetFromSymbolStart = "41">
+                  startingLineNumber = "89"
+                  endingLineNumber = "89"
+                  offsetFromSymbolStart = "34">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -663,32 +695,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "FD4CA100-C73C-473A-BAE3-522A70747242"
+            uuid = "2DE1E213-7B3A-4277-9A12-1DB80A8A22D2"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Cats/Networking/NetworkManager.swift"
+            filePath = "Cats/MainView/MainVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "giveMeACatRetry(url:numberOfAttempts:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "49FB4735-A64B-45C2-B822-9D4A38901D74"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Cats/Networking/NetworkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
-            landmarkName = "getCat(url:completion:)"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "loadNewImage()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

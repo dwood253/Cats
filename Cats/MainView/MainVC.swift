@@ -8,11 +8,11 @@
 
 import UIKit
 
-fileprivate let RELOAD_BUTTON_DIMENSION: CGFloat = 40
-fileprivate let THROTTLE_MESSAGE_DISPLAY_TIME: TimeInterval = 4
+fileprivate let RELOAD_BUTTON_DIMENSION: CGFloat = 20
+fileprivate let THROTTLE_MESSAGE_DISPLAY_TIME: TimeInterval = 3
 
 class MainVC: UIViewController {
-
+    
     lazy var backgroundImageView:UIImageView = {
         let imgv = UIImageView()
         imgv.translatesAutoresizingMaskIntoConstraints = false
@@ -64,7 +64,7 @@ class MainVC: UIViewController {
             displayImageView.heightAnchor.constraint(equalTo: self.view.heightAnchor),
             displayImageView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
             
-            reloadButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            reloadButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
             reloadButton.heightAnchor.constraint(equalToConstant: RELOAD_BUTTON_DIMENSION),
             reloadButton.widthAnchor.constraint(equalToConstant: RELOAD_BUTTON_DIMENSION),
             reloadButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -15)
@@ -82,18 +82,19 @@ class MainVC: UIViewController {
         let url = Session.data.getUrl()
         NetworkingManager.shared.getCat(url: url) { [weak self] (result) in
             guard let self = self else { return }
-            self.dismissLoadingViewNoAsync()
             switch result {
             case .success(let image):
+                self.dismissLoadingViewNoAsync()
                 UIView.transition(with: self.backgroundImageView, duration: 0.2, options: .transitionCrossDissolve, animations: {
                     self.backgroundImageView.image = self.getImageWithBlur(image)
                 }, completion: nil)
-                self.dismissLoadingView()
                 UIView.transition(with: self.displayImageView, duration: 0.2, options: .transitionCrossDissolve, animations: {
                      self.displayImageView.image = image
                  }, completion: nil)
             case .failure(let error):
-                self.showToast(error.error, forDuration: THROTTLE_MESSAGE_DISPLAY_TIME)
+                self.dismissLoadingViewWithCompletion {
+                    self.showToast(error.error, forDuration: THROTTLE_MESSAGE_DISPLAY_TIME)
+                }
             }
         }
     }

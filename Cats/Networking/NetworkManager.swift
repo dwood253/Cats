@@ -12,7 +12,7 @@ import Alamofire
 
 fileprivate let RETRY_COUNT = 5
 fileprivate let THROTTILING_MESSSAGE = "Failed to get a new cat. Try changing some options. Maybe be a furball in the network, or the API May be throttling..."
-
+fileprivate let NO_CAT_FOUND_MESSAGE = "That must be a super rare cat! Please try different options :)"
 class NetworkingManager {
     static let shared = NetworkingManager()
     static let jsonDecoder = JSONDecoder()
@@ -21,36 +21,42 @@ class NetworkingManager {
     }
     
     func getCat(url: String, completion: @escaping(Result<UIImage, nmError>) -> Void ) {
-        giveMeACatRetry(url: url, numberOfAttempts: 0) { (image) in
-            if let catImage = image {
+        giveMeACatRetry(url: url, numberOfAttempts: 0) { result in
+            switch result {
+            case .success(let catImage):
                 completion(.success(catImage))
-            } else {
-                completion(.failure(nmError(THROTTILING_MESSSAGE)))
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
     }
     
-    func giveMeACatRetry(url: String, numberOfAttempts: Int,  completion: @escaping(UIImage?) -> Void) {
+    func giveMeACatRetry(url: String, numberOfAttempts: Int,  completion: @escaping(Result<UIImage, nmError>) -> Void) {
         print("numberofattempts: \(numberOfAttempts)")
         if numberOfAttempts < RETRY_COUNT {
             AF.request(url).response { response in
-                if let data = response.data, let catImage = UIImage(data: data) {
-                    if let oldImageData = NetworkingManager.shared.previouslyFetchedData, oldImageData == data {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            self.giveMeACatRetry(url: url, numberOfAttempts: numberOfAttempts + 1) { (newImage) in
-                                completion(newImage)
-                            }
-                        }
-                    } else {
-                        NetworkingManager.shared.previouslyFetchedData = data
-                        completion(catImage)
-                    }
-                } else {
-                    completion(nil)
-                }
-            }
+                guard let status = response.response?.statusCode else { completion(.failure(nmError("unrecognized response from CATAAS API"))); return }
+                  if status != 404 {
+                      if let data = response.data, let catImage = UIImage(data: data) {
+                          if let oldImageData = NetworkingManager.shared.previouslyFetchedData, oldImageData == data {
+                              DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                  self.giveMeACatRetry(url: url, numberOfAttempts: numberOfAttempts + 1) { (result) in
+                                      completion(result)
+                                  }
+                              }
+                          } else {
+                              NetworkingManager.shared.previouslyFetchedData = data
+                              completion(.success(catImage))
+                          }
+                      } else {
+                          completion(.failure(nmError(THROTTILING_MESSSAGE)))
+                      }
+                  } else {
+                      completion(.failure(nmError(NO_CAT_FOUND_MESSAGE)))
+                  }
+              }
         } else {
-            completion(nil)
+            completion(.failure(nmError(THROTTILING_MESSSAGE)))
         }
     }
     
