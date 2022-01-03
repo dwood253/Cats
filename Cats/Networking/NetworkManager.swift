@@ -11,8 +11,8 @@ import UIKit
 import Alamofire
 
 fileprivate let RETRY_COUNT = 5
-fileprivate let THROTTILING_MESSSAGE = "Failed to get a new cat. Try changing some options. Maybe be a furball in the network, or the API May be throttling..."
-fileprivate let NO_CAT_FOUND_MESSAGE = "That must be a super rare cat! Please try different options :)"
+fileprivate let THROTTILING_MESSSAGE = "Failed to get a new cat. 😿 Try changing some options. Maybe a furball in the network, or the API May be throttling..."
+fileprivate let NO_CAT_FOUND_MESSAGE = "That must be a super rare cat! 😹 Please try different options"
 class NetworkingManager {
     static let shared = NetworkingManager()
     static let jsonDecoder = JSONDecoder()
